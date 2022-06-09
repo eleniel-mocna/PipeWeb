@@ -1,0 +1,11 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<ul class="nested" th:fragment="fileTreeView (folderTree)">
+    <li th:fragment="nestedFiles (folderTree)" th:each="folder:${folderTree.folders()}">
+        <span class="caret" th:text="${folder.root().toString()}">prototype text...></span>
+        <section th:replace="foldersFragment :: fileTreeView (folderTree=${folder})"></section>
+    </li>
+    <li th:each="file : ${folderTree.files()}">
+        <span th:text="${file}">placeholder</span>
+    </li>
+</ul>
+</html>

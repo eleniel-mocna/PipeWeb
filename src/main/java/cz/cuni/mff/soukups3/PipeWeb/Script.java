@@ -1,31 +1,58 @@
 package cz.cuni.mff.soukups3.PipeWeb;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.Arrays;
 
-public class Script {
-    private File path;
+public class Script implements Serializable {
+    private final File path;
+    private final String[] inputs;
+    private final String[] outputs;
 
-    public Script(File path){
-        this.path = path;
+    public Script(File path,
+                  String[] inputs,
+                  String[] outputs){
+        this.path = path.getAbsoluteFile();
+        this.inputs = inputs;
+        this.outputs = outputs;
+    }
+    public static Script fromConfig(File path,
+                                    File config){
+        String[] inputs = null;
+        String[] outputs = null;
+        try (BufferedReader br = new BufferedReader(new FileReader(config))){
+            inputs = br.readLine().split("\t");
+            outputs = br.readLine().split("\t");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new Script(path, inputs, outputs);
     }
 
-    public boolean run(String[] variables){
+    public ScriptRun run(String[] variables){
+        System.err.println("RAN script with:" + String.join(",", Arrays.stream(variables).map(Object::toString).toArray(String[]::new)));
         Runtime r = Runtime.getRuntime();
         Process p;
         try {
-            p = r.exec(path + String.join(" ", variables));
+            p = r.exec(path + " " + String.join(" ", variables));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return false;
+        return new ScriptRun(p, this, variables);
     }
     public String[] getInputs() {
-        return new String[0];
+        return inputs;
     }
 
     public String[] getOutputs() {
+        return outputs;
+    }
 
-        return new String[0];
+    public File getPath() {
+        return path;
+    }
+
+    @Override
+    public String toString() {
+        return path.toString();
     }
 }

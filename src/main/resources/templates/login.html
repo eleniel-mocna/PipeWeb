@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Spring Boot Thymeleaf Hello World Example</title>
+    <title>NGS login</title>
 
     <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
@@ -14,35 +14,36 @@
 <body>
 
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">NGS</a>
+    <a class="navbar-brand" href="/">NGS</a>
+    <a class="navbar-brand" href="/runningScripts">Runs</a>
+    <a class="navbar-brand" href="/login">Login</a>
 </nav>
 
 <main role="main" class="container">
 
     <div class="starter-template">
-        <h1>Browse my directories!</h1>
-        <h2>
-            <span th:text="'Hello, ' + ${message}">You!</span>
-        </h2>
+        <h1>Login</h1>
     </div>
 
     <ul>
-        <form action="/list" method="get">
-            <li>
-                <button type="submit" name="name" th:value="${tasks[0]+'/../..'}" class="btn-link">..</button>
-            </li>
-        </form>
-        <span th:each="task : ${tasks}">
-            <form action="/list" method="get">
+        <span th:each="login : ${logins}">       <!-- # hotovo-->
+            <form action="/index" method="get">
                 <li>
-                    <button type="submit" name="name" th:value="${task}" class="btn-link" th:text="${task}">Go</button>
+                    <button type="submit" name="name" th:value="${login}" class="btn-link" th:text="${login}">Go</button>
                 </li>
 
             </form>
 
         </span>
 
+        <form action="/addUser" method="get">  <!--name a value tam nebude-->
+            <li>
+                <button type="submit">Add user</button>
+            </li>
+        </form>
+
     </ul>
+
 
 </main>
 <!-- /.container -->

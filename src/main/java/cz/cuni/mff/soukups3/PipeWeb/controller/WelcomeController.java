@@ -20,30 +20,32 @@ public class WelcomeController {
     @Value("${welcome.message}")
     private String message;
 
-    @GetMapping("/list")
-    public String list(
-            @RequestParam(name = "name", required = false, defaultValue = "/Users/Public") String name, Model model){
-        File dir;
-        model.addAttribute("message", message);
-        try {
-            dir = new File(name).getCanonicalFile();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        FolderTree files = new DefaultFolderTree(dir);
-        FolderTree[] tasks=Arrays.stream(Objects.requireNonNull(dir.listFiles()))
-                .filter(File::isDirectory).map(DefaultFolderTree::new).toArray(DefaultFolderTree[]::new);
-        if (tasks.length<1){
-            tasks = new FolderTree[1];
-            try {
-                tasks[0] = new DefaultFolderTree(dir.getCanonicalPath() + "\\.");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
 
-        }
-        model.addAttribute("tasks", tasks);
-        return "welcome";
-    }
+
+//    @GetMapping("/list")
+//    public String list(
+//            @RequestParam(name = "name", required = false, defaultValue = "/Users/Public") String name, Model model){
+//        File dir;
+//        model.addAttribute("message", message);
+//        try {
+//            dir = new File(name).getCanonicalFile();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        FolderTree files = new DefaultFolderTree(dir);
+//        FolderTree[] tasks=Arrays.stream(Objects.requireNonNull(dir.listFiles()))
+//                .filter(File::isDirectory).map(DefaultFolderTree::new).toArray(DefaultFolderTree[]::new);
+//        if (tasks.length<1){
+//            tasks = new FolderTree[1];
+//            try {
+//                tasks[0] = new DefaultFolderTree(dir.getCanonicalPath() + "\\.");
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//        }
+//        model.addAttribute("tasks", tasks);
+//        return "welcome";
+//    }
 
 }
