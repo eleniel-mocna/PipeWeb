@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<span th:fragment="directory (root)">
+    <span th:text="${root.toString()}"></span>
+    <ul>
+        <span th:each="dir : ${root.folders()}">
+            <li th:replace="fragments/fileManager :: directory (${dir})"></li>
+        </span>
+        <span th:each="file : ${root.files()}">
+            <li th:text="${file}"></li>
+        </span>
+    </ul>
+</span>
+
+<span th:fragment="test">
+    <p>This has been tested!</p>
+</span>
+
+<span th:fragment="fileManager (root)">
+    <ul>
+        <li th:if="${root!=null}" th:replace="fragments/fileManager :: directory(${root})"></li>
+    </ul>
+</span>
+
+</body>
+</html>

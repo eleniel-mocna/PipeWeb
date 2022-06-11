@@ -12,11 +12,7 @@
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="/">NGS</a>
-    <a class="navbar-brand" href="/runningScripts">Runs</a>
-    <a class="navbar-brand" href="/login">Login</a>
-</nav>
+<span th:replace="fragments/header :: header">Missing header</span>
 <h1>Scripts:</h1>
 <table>
     <th>Script</th>
@@ -31,6 +27,7 @@
                 </span>
             </td>
             <td th:text="${run.getExitCode()}"></td>
+
         </tr>
     </span>
 </table>
