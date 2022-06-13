@@ -1,7 +1,11 @@
 package cz.cuni.mff.soukups3.PipeWeb;
 
+import org.apache.commons.compress.utils.FileNameUtils;
+
 import javax.management.openmbean.KeyAlreadyExistsException;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,6 +19,7 @@ public class Backend {
     private transient ArrayList<Script> scripts;
     public ArrayList<ScriptRun> runs = new ArrayList<>();
     private File homeDir;
+    private File scriptsFolder;
     private FolderTree folderTree;
     static {
         File dbFile = new File(DB_PATH);
@@ -43,6 +48,8 @@ public class Backend {
         this.name = name;
         this.scripts_file = scripts;
         this.homeDir = homeDir;
+        scriptsFolder = new File(homeDir + File.pathSeparator + "scripts");
+        scriptsFolder.mkdir();
         reloadFolderTree();
         if (homeDir.mkdir()) {
             System.err.println("INFO: Created directory" + homeDir); // TODO: Add a logger
@@ -79,40 +86,69 @@ public class Backend {
     public ArrayList<Script> getScripts() {
         return scripts;
     }
-    private ArrayList<Script> loadScripts(){
-        if (scripts_file.exists()) {
-            try (ObjectInputStream is = new ObjectInputStream(new FileInputStream(scripts_file))) {
-                return (ArrayList<Script>) is.readObject();
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-                return new ArrayList<>();
+    private ArrayList<Script> loadScripts(){ //TODO: test this
+        ArrayList<Script> ret = new ArrayList<>();
+        for (File file : scriptsFolder.listFiles()){
+            if (".desc".equals(FileNameUtils.getExtension(file.getName()))){
+                ret.add(Script.fromConfig(file.getAbsoluteFile(),
+                        new File(file.getParentFile().toString()
+                                + File.pathSeparator
+                                + FileNameUtils.getBaseName(file.toString()))));
             }
-        } else {
-            return new ArrayList<>();
         }
+        return ret;
     }
-    private boolean saveScripts(boolean overwrite){
-        ArrayList<Script> old_scripts = loadScripts();
-        if (!overwrite && old_scripts.size() >scripts.size()){
-            return false;
-        }
-        try(ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(scripts_file))) {
-            os.writeObject(scripts);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-    public boolean addScript(Script newScript) {
+//    private boolean saveScripts(boolean overwrite){
+//        ArrayList<Script> old_scripts = loadScripts();
+//        if (!overwrite && old_scripts.size() >scripts.size()){
+//            return false;
+//        }
+//        try(ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(scripts_file))) {
+//            os.writeObject(scripts);
+//            return true;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
+    public boolean addScript(Script newScript, boolean hardCopy) {  //TODO: Make this nicer
+        String scriptName = newScript.getPath().getName();
         for (Script s :
                 scripts) {
-            if (s.getPath().equals(newScript.getPath())) {
+            if (scriptName.equals(s.getPath().getName())){
                 return false;
             }
         }
+        File newScriptFile = new File(scriptsFolder + File.pathSeparator + scriptName);
+        File oldDescFile = new File(newScript.getPath().getPath()+".desc");
+        File newDescFile = new File(scriptsFolder + File.pathSeparator + scriptName + ".desc");
+        try {
+            if (hardCopy) {
+                Files.copy(newScript.getPath().toPath(), newScriptFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                if (oldDescFile.exists()) {
+                    Files.copy(oldDescFile.toPath(), newDescFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                } else {
+                    newScript.createDesc(newDescFile);
+                }
+            } else {
+                Files.createLink(newScriptFile.toPath(), newScript.getPath().toPath());
+                if (oldDescFile.exists()) {
+                    Files.createLink(newDescFile.toPath(), oldDescFile.toPath());
+                } else {
+                    newScript.createDesc(newDescFile);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            try {
+                Files.deleteIfExists(newScriptFile.toPath());
+                Files.deleteIfExists(newDescFile.toPath());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
         boolean ret = scripts.add(newScript);
-        saveScripts(false);
         return ret;
     }
     private void readObject(java.io.ObjectInputStream in)

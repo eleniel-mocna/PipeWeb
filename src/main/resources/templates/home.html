@@ -15,27 +15,46 @@
     <a class="navbar-brand" href="/runningScripts">Runs</a>
     <a class="navbar-brand" href="/login">Login</a>
 </nav>
-<span th:if="${backend!=null}">
-    <p>Hello, <span th:text="${backend.name}">placeholder</span>! <a href="/addScript">Add a script.</a> </p>
-    <ul>
-        <span th:each="s : ${backend.getScripts()}">
-            <li>
-                <form action="#" method="get">
-                    <input type="submit" name="script" th:value="${s}">
-                </form>
-            </li>
-        </span>
+<div th:if="${backend!=null}">
+    Hello, <span th:text="${backend.name}">placeholder</span>! <a href="/addScript">Add a script.</a><br>
+    <ul th:each="s : ${backend.getScripts()}">
+        <li>
+            <form action="#" method="get">
+                <input type="submit" name="script" th:value="${s}">
+            </form>
+        </li>
     </ul>
-</span>
+</div>
 <span th:if="${backend==null}">
     <a href="/">No user found, go log in!</a>
 </span>
-<span th:if="${script!=null}">
+<div th:if="${script!=null}">
     <form action="/runningScripts" method="get">
-        Arguments: <input type="text" name="arguments"> Config file, and for each sample:
-        <span th:each="i:${script.getInputs()}"><span th:text="${i}"></span> </span><br>
+        Config file:<input type="text" name="configFile"><br>
+        <table>
+            <tr>
+                <th></th>
+                <th th:each="i:${script.getInputs()}" th:text="${i.toString()}"></th>
+            </tr>
+            <tr>
+                <td></td>
+                <td th:each="i:${script.getInputs()}" th:text="${i.filter}"></td>
+            </tr>
+            <tr>
+                <td>Sample 1</td>
+                <td th:each="i:${script.getInputs()}">
+                    <datalist th:id="${i.toString()}" th:each="v : ${backend.getFolderTree().allFilesDirs(i.filter)}">
+                        <option th:value="${v}"></option>
+                    </datalist>
+                    <input type="text" th:list="${i.toString()}">
+                </td>
+            </tr>
+        </table>
+        <span th:each="i:${script.getInputs()}">
+            <span th:text="${i}"></span> </span><br>
         <input type="submit" name="script" th:value="${script}">
     </form>
-</span>
+</div>
+<ul th:replace="fragments/fileManager :: fileManager(${backend.getFolderTree()})"></ul>
 </body>
 </html>

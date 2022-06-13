@@ -1,2 +1,2 @@
 first_in:.*/	second_in:.*\.vcf
-first_out.vcf	second_out
+first_out.vcf:	second_out:

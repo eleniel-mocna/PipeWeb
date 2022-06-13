@@ -43,7 +43,8 @@ public class HomeController {
             } else model.addAttribute("descriptorExists", true);
 
             if (!failed) {
-                backend.addScript(Script.fromConfig(scriptFile, descriptorFile));
+                //TODO:make hardCopy an input option
+                backend.addScript(Script.fromConfig(scriptFile, descriptorFile), true);
             }
             model.addAttribute("failed", failed);
         }
@@ -57,6 +58,7 @@ public class HomeController {
                             @RequestParam(name = "script", required = false, defaultValue = "") String scriptName,
                             @RequestParam(name = "arguments", required = false, defaultValue = "") String arguments){
         Backend backend = Backend.forName((String) session.getAttribute("userName"));
+        backend.reloadFolderTree();
         Script script;
         if (!"".equals(scriptName)) {
             if ((script=backend.getScript(scriptName))!=null){

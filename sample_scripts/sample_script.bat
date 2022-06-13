@@ -1,2 +1,4 @@
 ECHO OFF
-ECHO Hello World
+ECHO Hello World...
+timeout /t 30
+ECHO Hello World done!

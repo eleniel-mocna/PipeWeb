@@ -1,16 +1,17 @@
 package cz.cuni.mff.soukups3.PipeWeb;
 
-import com.fasterxml.jackson.databind.util.ArrayIterator;
-
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class DefaultFolderTree implements FolderTree{
     private File root;
-    private Iterable<FolderTree> subFolders;
-    private Iterable<File> files;
+    private List<DefaultFolderTree> subFolders;
+    private List<File> files;
 
     public DefaultFolderTree(File root) {
         try {
@@ -19,11 +20,14 @@ public class DefaultFolderTree implements FolderTree{
             System.err.println("IOException occurred:" + e.getStackTrace());
         }
         File[] children = root.listFiles();
-        subFolders = children == null ? new ArrayIterator<FolderTree>(null)
-                : Arrays.stream(children).filter(File::isDirectory).map(DefaultFolderTree::new)
+        subFolders = children == null ? new LinkedList<>()
+                : Arrays.stream(children).filter(File::isDirectory)
+                .map(DefaultFolderTree::new)
                 .collect(Collectors.toList());
-        files = children == null ? new ArrayIterator<File>(null)
-                : Arrays.stream(children).filter(File::isFile).collect(Collectors.toList());
+        files = children == null ? new LinkedList<>()
+                : Arrays.stream(children).filter(File::isFile)
+                .map(File::getAbsoluteFile)
+                .collect(Collectors.toList());
     }
     public DefaultFolderTree(String root){
         this(new File(root));
@@ -31,7 +35,7 @@ public class DefaultFolderTree implements FolderTree{
 
     @Override
     public Iterable<FolderTree> folders() {
-        return subFolders;
+        return subFolders.stream().map(x->(FolderTree)x).collect(Collectors.toList());
     }
 
     @Override
@@ -43,6 +47,19 @@ public class DefaultFolderTree implements FolderTree{
     public File root() {
         return root;
     }
+
+    @Override
+    public List<File> allFilesDirs() {
+        List<File> ret = new ArrayList<>();
+        ret.add(root);
+        ret.addAll(files);
+        ret.addAll(subFolders.stream()
+                .flatMap(x -> x.allFilesDirs().stream())
+                .map(x -> new File(x.toURI().relativize(root.toURI())))
+                .collect(Collectors.toList()));
+        return ret;
+    }
+
     @Override
     public String toString() {
         return root.toString();
