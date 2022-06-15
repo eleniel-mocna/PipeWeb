@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class HomeController {
@@ -19,18 +21,18 @@ public class HomeController {
         System.err.println("Called home from: " + session.getAttribute("userName"));
         if (!"".equals(script)){
             model.addAttribute("script",backend.getScript(script));
+            backend.reloadFolderTree();
         }
         model.addAttribute("backend", backend);
         return ("home");
     }
     @GetMapping("/addScript")
     public String addScript(HttpSession session, Model model,
-                            @RequestParam(name = "scriptPath", required = false, defaultValue = "") String scriptPath,
-                            @RequestParam(name = "descriptorPath", required = false, defaultValue = "") String descriptorPath){
-        if (!("".equals(scriptPath) || "".equals(descriptorPath))){
+                            @RequestParam(name = "scriptPath", required = false, defaultValue = "") String scriptPath){
+        if (!("".equals(scriptPath))){
             model.addAttribute("tried", true);
             Backend backend = Backend.forName((String) session.getAttribute("userName"));
-            File descriptorFile = new File(descriptorPath);
+            File descriptorFile = new File(scriptPath+".desc");
             File scriptFile = new File(scriptPath);
             boolean failed = false;
             if (!scriptFile.exists()){
@@ -53,16 +55,19 @@ public class HomeController {
         }
         return "addScript";
     }
+
     @GetMapping("/runningScripts")
     public String runningScripts(HttpSession session, Model model,
-                            @RequestParam(name = "script", required = false, defaultValue = "") String scriptName,
-                            @RequestParam(name = "arguments", required = false, defaultValue = "") String arguments){
+                                 @RequestParam(name = "script", required = false, defaultValue = "") String scriptName,
+                                 @RequestParam Map<String, String> allRequestParams){
         Backend backend = Backend.forName((String) session.getAttribute("userName"));
         backend.reloadFolderTree();
         Script script;
         if (!"".equals(scriptName)) {
             if ((script=backend.getScript(scriptName))!=null){
-                backend.runs.add(script.run(new String[]{arguments}));
+                backend.runs.add(script.run(allRequestParams.keySet().stream()
+                        .filter(x->!"script".equals(x))
+                        .map(x -> allRequestParams.get(x)).collect(Collectors.toList())));
             }
         }
         model.addAttribute("backend", backend);

@@ -3,6 +3,7 @@ package cz.cuni.mff.soukups3.PipeWeb;
 import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.util.Arrays;
+import java.util.Collection;
 
 public class Script implements Serializable {
     private final File path;
@@ -33,8 +34,8 @@ public class Script implements Serializable {
         public IOType(@NotNull String inputString){
             String[] splits = inputString.split(":");
             name = splits[0];
-            filter = splits.length==2 ? splits[1] : ".*";
-            filter = filter.equals("") ? ".*" :filter;
+            filter = splits.length==2 ? splits[1].trim() : ".*".trim();
+            filter = filter.equals("") ? ".*".trim() :filter.trim();
         }
 
         @Override
@@ -63,8 +64,10 @@ public class Script implements Serializable {
                                Arrays.stream(outputs).map(IOType::new).toArray(IOType[]::new));
     }
 
-    public ScriptRun run(String[] variables){
-        System.err.println("RAN script with:" + String.join(",", Arrays.stream(variables).map(Object::toString).toArray(String[]::new)));
+    public ScriptRun run(Collection<String> variables){
+        System.err.println("RAN script with:" + String.join(",",
+                variables.stream()
+                        .map(Object::toString).toArray(String[]::new)));
         Runtime r = Runtime.getRuntime();
         Process p;
         try {

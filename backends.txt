@@ -1,2 +1,1 @@
-Second user;SecondUser\scripts;SecondUser
-my name;scripts;root
+defaultUser;defaultUser\scripts;C:\Users\souku\Documents\motol\PipeWeb\defaultUser

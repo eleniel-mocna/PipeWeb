@@ -55,7 +55,6 @@ public class DefaultFolderTree implements FolderTree{
         ret.addAll(files);
         ret.addAll(subFolders.stream()
                 .flatMap(x -> x.allFilesDirs().stream())
-                .map(x -> new File(x.toURI().relativize(root.toURI())))
                 .collect(Collectors.toList()));
         return ret;
     }

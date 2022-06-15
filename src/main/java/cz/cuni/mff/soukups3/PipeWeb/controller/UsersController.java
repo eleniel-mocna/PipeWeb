@@ -9,7 +9,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpSession;
-import java.io.File;
 
 @Controller("/")
 public class UsersController {
@@ -35,10 +34,8 @@ public class UsersController {
 
     @GetMapping("/addUser")
     public String addUser(HttpSession session, Model model,
-                           @RequestParam(name = "name", required = false, defaultValue = "") String name,
-                           @RequestParam(name = "scripts", required = false, defaultValue = "") String scripts_file,
-                           @RequestParam(name = "home", required = false, defaultValue = "") String home_folder){
-        System.err.println("INFO: addUser called with:" + name + scripts_file +home_folder);
+                           @RequestParam(name = "name", required = false, defaultValue = "") String name){
+        System.err.println("INFO: addUser called with: " + name);
 
         if ("".equals(name)){
             model.addAttribute("added", false);
@@ -46,10 +43,7 @@ public class UsersController {
         }
         else {
             model.addAttribute("triedToAdd", true);
-            if ("".equals(scripts_file) || "".equals(home_folder)){
-                model.addAttribute("added", false);
-            }
-            Backend.createBackend(name, new File(scripts_file), new File(home_folder));
+            Backend.createBackend(name);
             model.addAttribute("added", true);
             model.addAttribute("name", name);
         }

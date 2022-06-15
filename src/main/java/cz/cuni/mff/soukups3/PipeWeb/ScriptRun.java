@@ -1,5 +1,7 @@
 package cz.cuni.mff.soukups3.PipeWeb;
 
+import java.util.Collection;
+
 public class ScriptRun {
     public final Process process;
     public final Script script;
@@ -8,10 +10,10 @@ public class ScriptRun {
 
     public ScriptRun(Process process,
                      Script script,
-                     String[] arguments){
+                     Collection<String> arguments){
         this.process = process;
         this.script = script;
-        this.arguments = arguments;
+        this.arguments = arguments.toArray(new String[0]);
     }
     public void kill(){
         killed=true;

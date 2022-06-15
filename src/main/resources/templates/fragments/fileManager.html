@@ -6,15 +6,17 @@
 <body>
 
 <span th:fragment="directory (root)">
-    <span th:text="${root.toString()}"></span>
-    <ul>
-        <span th:each="dir : ${root.folders()}">
-            <li th:replace="fragments/fileManager :: directory (${dir})"></li>
-        </span>
-        <span th:each="file : ${root.files()}">
-            <li th:text="${file}"></li>
-        </span>
-    </ul>
+    <details>
+        <summary th:text="${root.toString()}"></summary>
+        <ul>
+            <span th:each="dir : ${root.folders()}">
+                <li th:replace="fragments/fileManager :: directory (${dir})"></li>
+            </span>
+            <span th:each="file : ${root.files()}">
+                <li th:text="${file}"></li>
+            </span>
+        </ul>
+    </details>
 </span>
 
 <span th:fragment="test">
