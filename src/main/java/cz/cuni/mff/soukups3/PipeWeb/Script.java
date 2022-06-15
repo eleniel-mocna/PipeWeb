@@ -64,14 +64,18 @@ public class Script implements Serializable {
                                Arrays.stream(outputs).map(IOType::new).toArray(IOType[]::new));
     }
 
-    public ScriptRun run(Collection<String> variables){
+    public ScriptRun run(File root, Collection<String> variables){
         System.err.println("RAN script with:" + String.join(",",
                 variables.stream()
                         .map(Object::toString).toArray(String[]::new)));
         Runtime r = Runtime.getRuntime();
         Process p;
         try {
-            p = r.exec(path + " " + String.join(" ", variables));
+            String[] command = {"/bin/bash", "-c", path.toString() + " " + String.join(" ", variables)};
+            ProcessBuilder builder = new ProcessBuilder(command);
+            builder.directory(root);
+            p = builder.start();
+            p.getOutputStream().close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -34,7 +34,8 @@ public class UsersController {
 
     @GetMapping("/addUser")
     public String addUser(HttpSession session, Model model,
-                           @RequestParam(name = "name", required = false, defaultValue = "") String name){
+                           @RequestParam(name = "name", required = false, defaultValue = "") String name,
+                           @RequestParam(name = "path", required = false, defaultValue = "") String path){
         System.err.println("INFO: addUser called with: " + name);
 
         if ("".equals(name)){
@@ -43,7 +44,7 @@ public class UsersController {
         }
         else {
             model.addAttribute("triedToAdd", true);
-            Backend.createBackend(name);
+            Backend.createBackend(name, path);
             model.addAttribute("added", true);
             model.addAttribute("name", name);
         }

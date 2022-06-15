@@ -65,7 +65,7 @@ public class HomeController {
         Script script;
         if (!"".equals(scriptName)) {
             if ((script=backend.getScript(scriptName))!=null){
-                backend.runs.add(script.run(allRequestParams.keySet().stream()
+                backend.runs.add(script.run(backend.getFolderTree().root(), allRequestParams.keySet().stream()
                         .filter(x->!"script".equals(x))
                         .map(x -> allRequestParams.get(x)).collect(Collectors.toList())));
             }

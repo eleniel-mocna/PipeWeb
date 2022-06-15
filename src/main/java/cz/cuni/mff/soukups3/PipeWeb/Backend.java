@@ -65,25 +65,26 @@ public class Backend {
         return backends.get(name);
     }
 
-    public static boolean createBackend(String name) throws KeyAlreadyExistsException {
+    public static boolean createBackend(String name, String path) throws KeyAlreadyExistsException {
         if (backends.get(name)==null){
             Backend b = new Backend(name,
-                    new File(name+File.separator+".scripts"),
-                    new File(name));
+                    new File(path+File.separator+".scripts"),
+                    new File(path));
             backends.put(name, b);
+            saveBackends();
             return true;
         }
         return false;
     }
-//    public static void saveBackends(){
-//        StringBuffer ret = new StringBuffer();
-//        backends.values().forEach(x -> ret.append(x.name+";"+x.scriptsFolder.toString()+";"+x.homeDir+System.lineSeparator()));
-//        try(BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH))) {
-//            bw.write(String.valueOf(ret));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public static void saveBackends(){
+        StringBuffer ret = new StringBuffer();
+        backends.values().forEach(x -> ret.append(x.name+";"+x.scriptsFolder.toString()+";"+x.homeDir+System.lineSeparator()));
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH))) {
+            bw.write(String.valueOf(ret));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public ArrayList<Script> getScripts() {
         return scripts;

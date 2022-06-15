@@ -15,6 +15,7 @@
 <form action="/addScript" method="get">
     <input type="text" name="scriptPath" placeholder="Script path">
     <input type="submit" value="Submit">
+    <p>Make sure that for file .../script.sh descriptor file .../script.sh.desc exists. </p>
 </form>
 <span th:if="${tried}">
     <span th:if="${failed}">

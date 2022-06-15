@@ -23,6 +23,7 @@
 
 <form action="/addUser" method="get">
     <input type="text" name="name" placeholder="Name">
+    <input type="text" name="path" placeholder="Path">
     <input type="submit" value="Submit">
 </form>
 <div style="background-color: green" th:if="${added}" th:text="${'Successfully added user ' + name}"></div>

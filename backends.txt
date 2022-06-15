@@ -1,1 +1,1 @@
-defaultUser;defaultUser\scripts;C:\Users\souku\Documents\motol\PipeWeb\defaultUser
+defaultUser;/data/Samuel_workdir/PipeWeb/defaultUser/scripts;/data/Samuel_workdir/PipeWeb/defaultUser/
