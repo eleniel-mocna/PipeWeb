@@ -19,7 +19,7 @@
         </summary>
         <!-- root = kořen; tímhle to začíná, tj první řádek -->
         <!-- sem se dá hodit span X nezobrazuje se v něm text -->
-        <ul>    
+        <ul>
             <!-- <ul> je unordered; <ol> je ordered -->
             <span th:each="dir : ${root.folders()}">
                 <li th:replace="fragments/fileManager :: directory (${dir})"></li>

@@ -1,1 +1,1 @@
-defaultUser;/data/Samuel_workdir/PipeWeb/defaultUser/scripts;/data/Samuel_workdir/PipeWeb/defaultUser/
+defaultUser;defaultUser/scripts;defaultUser/
