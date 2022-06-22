@@ -14,9 +14,9 @@ h2{
 	color:#FF0000;
 }
  /* Remove default bullets */
-ul, #myUL {
+/* ul, #myUL {
   list-style-type: none;
-}
+} */
 
 /* Remove margins and padding from the parent ul */
 #myUL {
@@ -44,9 +44,9 @@ ul, #myUL {
 }
 
 /* Hide the nested list */
-.nested {
+/* .nested {
   display: none;
-}
+} */
 
 /* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
 .active {
@@ -56,3 +56,14 @@ ul, #myUL {
 table, th, td {
     border:1px solid black;
     }
+
+.mojeP {
+    color: red;
+}
+.astext {
+  background:none;
+  border:none;
+  margin:0;
+  padding:0;
+  cursor: pointer;
+}

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,7 @@ public class HomeController {
             model.addAttribute("script",backend.getScript(script));
             backend.reloadFolderTree();
         }
+        model.addAttribute("dateFormat", new SimpleDateFormat("dd/MM/yyyy - hh:mm:ss"));
         model.addAttribute("backend", backend);
         return ("home");
     }

@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
 <span th:replace="fragments/header :: header">Missing header</span>
@@ -81,5 +82,25 @@
     </form>
 </div>
 <ul th:replace="fragments/fileManager :: fileManager(${backend.getFolderTree()})"></ul>
+<ul id="ulName">
+    <li data-sortby="3">three</li>
+    <li data-sortby="1">one</li>
+    <li data-sortby="2">two</li>
+    <li data-sortby="4">four</li>
+</ul>
+<script>
+    function sort(){    
+    var ul = $('ul#ulName'),
+        li = ul.children('li');
+
+
+    li.detach().sort(function(a,b) {
+        return $(a).data('sortby') - $(b).data('sortby');
+    });
+
+    ul.append(li);
+};
+</script>
+<button type="button" onclick="sort()">sort</button>
 </body>
 </html>

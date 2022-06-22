@@ -5,39 +5,42 @@
 </head>
 <body>
 
-<span th:fragment="directory (root)">
-    <details>
+<span th:fragment="directory (root)" class="fileTreeDirectory">
+
+    <details open>
         <summary>
             <span th:text="${root.root().getName()}" style="color:rgb(0, 182, 161);"></span>
-            <span th:text="${root.root().lastModified()} + lastModified"></span>
-            <!-- DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy - hh:mm:ss"); -->
-            <!-- System.out.println(dateFormat.format(fileTime.toMillis())) -->
+            <span th:text="${dateFormat.format(root.root().lastModified())}"></span>
             <span th:text="${root.root().length()} + bytes"></span>
             <span th:text="directory"></span>
             <span th:text="dir"></span>
             <span th:text="${root.toString()}" style="color:rgb(0, 166, 255);"></span>
         </summary>
-        <!-- root = kořen; tímhle to začíná, tj první řádek -->
-        <!-- sem se dá hodit span X nezobrazuje se v něm text -->
-        <ul>
+        <ul class="folderTree">
             <!-- <ul> je unordered; <ol> je ordered -->
             <span th:each="dir : ${root.folders()}">
                 <li th:replace="fragments/fileManager :: directory (${dir})"></li>
-                <!-- <li> definuje list item; th = heading; directory - rekurze -->
-                <!-- sem přidat info: formát?, velikost, datum poslední úpravy -->
+                <!--/* <li> definuje list item; th = heading; directory - rekurze */-->
+                <!--/* sem přidat info: formát?, velikost, datum poslední úpravy */-->
             </span>
-            <span th:each="file : ${root.files()}">
-                <li style="color:rgb(255, 0, 247);">
-                    <span th:text="${file.getName()}"></span>
-                    <span th:text="${file.lastModified()} + lastModified"></span>
-                    <!-- DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy - hh:mm:ss"); -->
-                    <!-- System.out.println(dateFormat.format(fileTime.toMillis())) -->
-                    <span th:text="${file.length()} + bytes"></span>
-                    <span th:with='splits=${file.toString().split("\.")}' th:text="${splits.length>1 ? splits[splits.length-1] : '-'}"></span>
-                    <span th:text="file"></span>
-                    <span th:text="${file}"></span>
-                </li>
-            </span>
+            <div class="folderTreeFiles">
+                <th:block th:each="file : ${root.files()}">
+                    <li style="color:rgb(255, 0, 247);"
+                        th:with='splits=${file.toString().split("\.")}'
+                        th:attr="data-name=${file.getName()},
+                            data-modified=${file.lastModified()},
+                            data-size=${file.length()},
+                            data-ext=${splits.length>1 ? splits[splits.length-1] : '-'}"
+                        >
+                        <span th:text="${file.getName()}"></span>
+                        <span th:text="${dateFormat.format(file.lastModified())}"></span>                        
+                        <span th:text="${file.length()} + bytes"></span>
+                        <span th:with='splits=${file.toString().split("\.")}' th:text="${splits.length>1 ? splits[splits.length-1] : '-'}"></span>
+                        <span th:text="file"></span>
+                        <span th:text="${file}"></span>
+                    </li>
+                </th:block>
+            </div>
         </ul>
     </details>
 </span>
@@ -50,6 +53,69 @@
     <ul>
         <li th:if="${root!=null}" th:replace="fragments/fileManager :: directory(${root})"></li>
     </ul>
+    <p class="mojeP" id="demo">My first<span>paragraph.</span></p>
+    <script>
+        function filterTrees(what) {
+            document.getElementById("demo").innerHTML=what;
+            var fileTrees = document.getElementsByClassName("fileTreeDirectory");
+            for (var i=0; i<fileTrees.length; i++){
+                var tree = fileTrees[i];
+                if (tree.innerHTML.indexOf(what) == -1){
+                    tree.style.display="none";
+                } else {
+                    tree.style.display="block";
+                }
+
+            }
+        }
+        function sortList(ul, fun){
+            var new_ul = ul.cloneNode(false);
+
+            // Add all lis to an array
+            var lis = [];
+            for(var i = ul.childNodes.length; i--;){
+                if (ul.childNodes[i].nodeName=="LI") {
+                    lis.push(ul.childNodes[i]);
+                } else {
+                    new_ul.appendChild(ul.childNodes[i]);
+                }
+                    
+            }
+            // Sort the lis in descending order
+            lis.sort(fun);
+
+            // Add them into the ul in order
+            for(var i = 0; i < lis.length; i++){
+                new_ul.appendChild(lis[i]);
+                }
+            ul.parentNode.replaceChild(new_ul, ul);
+        }
+        function sortFileManager(by, ascending) {
+            var all = document.getElementsByClassName("folderTreeFiles");
+            var fun = by=="name" || by=="ext" ? function(a, b){
+                return ($(a).data(by)<$(b).data(by)?-ascending:($(a).data(by)>$(b).data(by)?ascending:0));  
+            } : function(a, b){
+                return (parseInt($(a).data(by))<parseInt($(b).data(by))?-ascending:
+                parseInt(($(a).data(by))>parseInt($(b).data(by))?ascending:0));  
+            }
+            
+            for (let i = 0; i < all.length; i++) {
+                const ul = all[i];
+                sortList(ul, fun);
+            }
+        }
+    </script>
+    <input type="text" oninput='filterTrees(this.value)'>
+    <button type="button" onclick="sortFileManager('name', 1)">Sort by name asc</button>
+    <button type="button" onclick="sortFileManager('name', -1)">Sort by name desc</button>
+    <button type="button" onclick="sortFileManager('size', 1)">Sort by size asc</button>
+    <button type="button" onclick="sortFileManager('size', -1)">Sort by size desc</button>
+    <button type="button" onclick="sortFileManager('ext', 1)">Sort by ext asc</button>
+    <button type="button" onclick="sortFileManager('ext', -1)">Sort by ext desc</button>
+    <button type="button" onclick="sortFileManager('modified', 1)">Sort by lastModified asc</button>
+    <button type="button" onclick="sortFileManager('modified', -1)">Sort by lastModified desc</button>
+
+    
 </span>
 
 </body>
