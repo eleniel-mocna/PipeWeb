@@ -7,13 +7,36 @@
 
 <span th:fragment="directory (root)">
     <details>
-        <summary th:text="${root.toString()}"></summary>
-        <ul>
+        <summary>
+            <span th:text="${root.root().getName()}" style="color:rgb(0, 182, 161);"></span>
+            <span th:text="${root.root().lastModified()} + lastModified"></span>
+            <!-- DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy - hh:mm:ss"); -->
+            <!-- System.out.println(dateFormat.format(fileTime.toMillis())) -->
+            <span th:text="${root.root().length()} + bytes"></span>
+            <span th:text="directory"></span>
+            <span th:text="dir"></span>
+            <span th:text="${root.toString()}" style="color:rgb(0, 166, 255);"></span>
+        </summary>
+        <!-- root = kořen; tímhle to začíná, tj první řádek -->
+        <!-- sem se dá hodit span X nezobrazuje se v něm text -->
+        <ul>    
+            <!-- <ul> je unordered; <ol> je ordered -->
             <span th:each="dir : ${root.folders()}">
                 <li th:replace="fragments/fileManager :: directory (${dir})"></li>
+                <!-- <li> definuje list item; th = heading; directory - rekurze -->
+                <!-- sem přidat info: formát?, velikost, datum poslední úpravy -->
             </span>
             <span th:each="file : ${root.files()}">
-                <li th:text="${file}"></li>
+                <li style="color:rgb(255, 0, 247);">
+                    <span th:text="${file.getName()}"></span>
+                    <span th:text="${file.lastModified()} + lastModified"></span>
+                    <!-- DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy - hh:mm:ss"); -->
+                    <!-- System.out.println(dateFormat.format(fileTime.toMillis())) -->
+                    <span th:text="${file.length()} + bytes"></span>
+                    <span th:with='splits=${file.toString().split("\.")}' th:text="${splits.length>1 ? splits[splits.length-1] : '-'}"></span>
+                    <span th:text="file"></span>
+                    <span th:text="${file}"></span>
+                </li>
             </span>
         </ul>
     </details>
