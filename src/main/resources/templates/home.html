@@ -12,9 +12,10 @@
 </head>
 <body>
 <span th:replace="fragments/header :: header">Missing header</span>
-<div th:if="${backend!=null}">
-    Hello, <span th:text="${backend.name}">placeholder</span>! <a href="/addScript">Add a script.</a><br>
-    <ul th:each="s : ${backend.getScripts()}">
+
+<div th:if="${backend!=null}"  style="text-align:right;">
+    Hello, <span th:text="${backend.name}">placeholder</span>! <br><a href="/addScript">Add a script.</a><br>
+    <ul th:each="s : ${backend.getScripts()}"  style="text-align:left;">
         <li>
             <form action="#" method="get">
                 <input type="submit" name="script" th:value="${s}">
@@ -25,82 +26,70 @@
 <span th:if="${backend==null}">
     <a href="/">No user found, go log in!</a>
 </span>
-<div th:if="${script!=null}">
-    <hr><hr>
-    <form action="/runningScripts" method="get">
-        Config file:<input type="text" name="configFile" placeholder="-"><br>
-        <table>
-            <tr>
-                <th></th>
-                <th th:each="i:${script.getInputs()}" th:text="${i.toString()}"></th>
-            </tr>
-            <tr>
-                <td></td>
-                <td th:each="i:${script.getInputs()}" th:text="${i.filter}"></td>
-            </tr>
-            <tr>
-                <td>Sample 1</td>
-                <td th:each="i:${script.getInputs()}">
-                    <datalist th:id="${i.toString()}" >
-                        <select>
-                            <option
-                                    th:each="v : ${backend.getFolderTree().allFilesDirs(i.filter, backend.getFolderTree().root())}"
-                                    th:value="${v}"></option>
-                        </select>
-                    </datalist>
-                    <input type="text" th:name="${i.toString()+'1'}" th:list="${i.toString()}">
-                </td>
-            </tr>
-            <tr>
-                <td>Sample 2</td>
-                <td th:each="i:${script.getInputs()}">
-                    <datalist th:id="${i.toString()}" >
-                        <select>
-                            <option
-                                    th:each="v : ${backend.getFolderTree().allFilesDirs(i.filter, backend.getFolderTree().root())}"
-                                    th:value="${v}"></option>
-                        </select>
-                    </datalist>
-                    <input type="text" th:name="${i.toString()+'2'}" th:list="${i.toString()}">
-                </td>
-            </tr>
-            <tr>
-                <td>Sample 3</td>
-                <td th:each="i:${script.getInputs()}">
-                    <datalist th:id="${i.toString()}" >
-                        <select>
-                            <option
-                                    th:each="v : ${backend.getFolderTree().allFilesDirs(i.filter, backend.getFolderTree().root())}"
-                                    th:value="${v}"></option>
-                        </select>
-                    </datalist>
-                    <input type="text" th:name="${i.toString()+'3'}" th:list="${i.toString()}">
-                </td>
-            </tr>
-        </table>
-        <input type="submit" name="script" th:value="${script}">
-    </form>
+<hr><hr>
+
+
+<div class="row">
+    <div class="column1" th:if="${script!=null}">
+        <form action="/runningScripts" method="get">
+            Config file:<input type="text" name="configFile" placeholder="-"><br>
+            <table>
+                <tr>
+                    <th></th>
+                    <th th:each="i:${script.getInputs()}" th:text="${i.toString()}"></th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td th:each="i:${script.getInputs()}" th:text="${i.filter}"></td>
+                </tr>
+                <tr>
+                    <td>Sample 1</td>
+                    <td th:each="i:${script.getInputs()}">
+                        <datalist th:id="${i.toString()}" >
+                            <select>
+                                <option
+                                        th:each="v : ${backend.getFolderTree().allFilesDirs(i.filter, backend.getFolderTree().root())}"
+                                        th:value="${v}"></option>
+                            </select>
+                        </datalist>
+                        <input type="text" th:name="${i.toString()+'1'}" th:list="${i.toString()}">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Sample 2</td>
+                    <td th:each="i:${script.getInputs()}">
+                        <datalist th:id="${i.toString()}" >
+                            <select>
+                                <option
+                                        th:each="v : ${backend.getFolderTree().allFilesDirs(i.filter, backend.getFolderTree().root())}"
+                                        th:value="${v}"></option>
+                            </select>
+                        </datalist>
+                        <input type="text" th:name="${i.toString()+'2'}" th:list="${i.toString()}">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Sample 3</td>
+                    <td th:each="i:${script.getInputs()}">
+                        <datalist th:id="${i.toString()}" >
+                            <select>
+                                <option
+                                        th:each="v : ${backend.getFolderTree().allFilesDirs(i.filter, backend.getFolderTree().root())}"
+                                        th:value="${v}"></option>
+                            </select>
+                        </datalist>
+                        <input type="text" th:name="${i.toString()+'3'}" th:list="${i.toString()}">
+                    </td>
+                </tr>
+            </table>
+            <input type="submit" name="script" th:value="${script}">
+        </form>
+    </div>
+
+    <div class="column2">
+        <ul th:replace="fragments/fileManager :: fileManager(${backend.getFolderTree()})"></ul>
+    </div>
 </div>
-<ul th:replace="fragments/fileManager :: fileManager(${backend.getFolderTree()})"></ul>
-<ul id="ulName">
-    <li data-sortby="3">three</li>
-    <li data-sortby="1">one</li>
-    <li data-sortby="2">two</li>
-    <li data-sortby="4">four</li>
-</ul>
-<script>
-    function sort(){    
-    var ul = $('ul#ulName'),
-        li = ul.children('li');
 
-
-    li.detach().sort(function(a,b) {
-        return $(a).data('sortby') - $(b).data('sortby');
-    });
-
-    ul.append(li);
-};
-</script>
-<button type="button" onclick="sort()">sort</button>
 </body>
 </html>

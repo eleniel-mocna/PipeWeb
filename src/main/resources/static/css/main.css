@@ -1,5 +1,6 @@
 body {
   padding-top: 5rem;
+  /* background-color:azure; */
 }
 .starter-template {
   padding: 3rem 1.5rem;
@@ -7,11 +8,11 @@ body {
 }
 
 h1{
-	color:#0000FF;
+	color:#3333cc;
 }
 
 h2{
-	color:#FF0000;
+	color:#1e96f8;
 }
  /* Remove default bullets */
 /* ul, #myUL {
@@ -55,15 +56,53 @@ h2{
 
 table, th, td {
     border:1px solid black;
-    }
+}
 
-.mojeP {
-    color: red;
+/* Make border to input fields */
+input[type=text]:focus {
+      outline: none;
+      border: 3px solid #555;
 }
-.astext {
-  background:none;
-  border:none;
-  margin:0;
-  padding:0;
+
+/* Design for buttons */
+input[type=button], input[type=submit], input[type=reset] {
+  background-color: #04AA6D;
+  border: none;
+  border-radius: 3px;
+  color: white;
+  padding: 6px 12px;
+  text-decoration: none;
+  margin: 4px 2px;
   cursor: pointer;
+  transition-duration: 0.4s;
+  /* border: 2px solid #555; */
 }
+
+/* Button change if clicked */
+input[type=submit]:hover {
+  background-color: #047eaa;
+  color: white;
+  box-shadow: 0 12px 12px 0 rgba(0,0,0,0.24), 0 12px 12px 0 rgba(0,0,0,0.19);
+}
+
+/* Padding */
+div {
+  padding: 10px 20px 10px;
+}
+
+
+/* Layout for home.html */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.column1 {
+  float: left;
+  width: 35%;
+}
+.column2 {
+  float: left;
+  width: 65%;
+}
+
