@@ -58,11 +58,42 @@ table, th, td {
     border:1px solid black;
 }
 
+/* Design for input form in home.html */
+.grayArray {
+  width: 100%;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  resize: none;
+}
+
+/* Design for table in home.html */
+table {
+  border: solid #ccc;
+}
+td, th, tr {
+  border: 0px solid;
+  text-align: center;
+}
+
+/* Design for input text fields */
+input[type=text] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 4px 0;
+  box-sizing: border-box;
+  border: 3px solid #ccc;
+  transition: 0.5s;
+  outline: none;
+}
 /* Make border to input fields */
 input[type=text]:focus {
-      outline: none;
       border: 3px solid #555;
 }
+
 
 /* Design for buttons */
 input[type=button], input[type=submit], input[type=reset] {

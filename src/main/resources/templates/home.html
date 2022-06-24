@@ -31,59 +31,61 @@
 
 <div class="row">
     <div class="column1" th:if="${script!=null}">
-        <form action="/runningScripts" method="get">
-            Config file:<input type="text" name="configFile" placeholder="-"><br>
-            <table>
-                <tr>
-                    <th></th>
-                    <th th:each="i:${script.getInputs()}" th:text="${i.toString()}"></th>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td th:each="i:${script.getInputs()}" th:text="${i.filter}"></td>
-                </tr>
-                <tr>
-                    <td>Sample 1</td>
-                    <td th:each="i:${script.getInputs()}">
-                        <datalist th:id="${i.toString()}" >
-                            <select>
-                                <option
-                                        th:each="v : ${backend.getFolderTree().allFilesDirs(i.filter, backend.getFolderTree().root())}"
-                                        th:value="${v}"></option>
-                            </select>
-                        </datalist>
-                        <input type="text" th:name="${i.toString()+'1'}" th:list="${i.toString()}">
-                    </td>
-                </tr>
-                <tr>
-                    <td>Sample 2</td>
-                    <td th:each="i:${script.getInputs()}">
-                        <datalist th:id="${i.toString()}" >
-                            <select>
-                                <option
-                                        th:each="v : ${backend.getFolderTree().allFilesDirs(i.filter, backend.getFolderTree().root())}"
-                                        th:value="${v}"></option>
-                            </select>
-                        </datalist>
-                        <input type="text" th:name="${i.toString()+'2'}" th:list="${i.toString()}">
-                    </td>
-                </tr>
-                <tr>
-                    <td>Sample 3</td>
-                    <td th:each="i:${script.getInputs()}">
-                        <datalist th:id="${i.toString()}" >
-                            <select>
-                                <option
-                                        th:each="v : ${backend.getFolderTree().allFilesDirs(i.filter, backend.getFolderTree().root())}"
-                                        th:value="${v}"></option>
-                            </select>
-                        </datalist>
-                        <input type="text" th:name="${i.toString()+'3'}" th:list="${i.toString()}">
-                    </td>
-                </tr>
-            </table>
-            <input type="submit" name="script" th:value="${script}">
-        </form>
+        <div class="grayArray">
+            <form action="/runningScripts" method="get">
+                Config file:<input type="text" name="configFile" placeholder="-"><br>
+                <table>
+                    <tr>
+                        <th></th>
+                        <th th:each="i:${script.getInputs()}" th:text="${i.toString()}"></th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td th:each="i:${script.getInputs()}" th:text="${i.filter}"></td>
+                    </tr>
+                    <tr>
+                        <td>Sample 1</td>
+                        <td th:each="i:${script.getInputs()}">
+                            <datalist th:id="${i.toString()}" >
+                                <select>
+                                    <option
+                                            th:each="v : ${backend.getFolderTree().allFilesDirs(i.filter, backend.getFolderTree().root())}"
+                                            th:value="${v}"></option>
+                                </select>
+                            </datalist>
+                            <input type="text" th:name="${i.toString()+'1'}" th:list="${i.toString()}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sample 2</td>
+                        <td th:each="i:${script.getInputs()}">
+                            <datalist th:id="${i.toString()}" >
+                                <select>
+                                    <option
+                                            th:each="v : ${backend.getFolderTree().allFilesDirs(i.filter, backend.getFolderTree().root())}"
+                                            th:value="${v}"></option>
+                                </select>
+                            </datalist>
+                            <input type="text" th:name="${i.toString()+'2'}" th:list="${i.toString()}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sample 3</td>
+                        <td th:each="i:${script.getInputs()}">
+                            <datalist th:id="${i.toString()}" >
+                                <select>
+                                    <option
+                                            th:each="v : ${backend.getFolderTree().allFilesDirs(i.filter, backend.getFolderTree().root())}"
+                                            th:value="${v}"></option>
+                                </select>
+                            </datalist>
+                            <input type="text" th:name="${i.toString()+'3'}" th:list="${i.toString()}">
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <input type="submit" name="script" th:value="${script}">
     </div>
 
     <div class="column2">
