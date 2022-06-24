@@ -33,7 +33,8 @@
     <div class="column1" th:if="${script!=null}">
         <div class="grayArray">
             <form action="/runningScripts" method="get">
-                Config file:<input type="text" name="configFile" placeholder="-"><br>
+                Config file:<input type="text" name="configFile" placeholder="-">
+                <input type="submit" name="script" th:value="OK"><br>
                 <table>
                     <tr>
                         <th></th>
@@ -85,7 +86,6 @@
                 </table>
             </form>
         </div>
-        <input type="submit" name="script" th:value="${script}">
     </div>
 
     <div class="column2">
