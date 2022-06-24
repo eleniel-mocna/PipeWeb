@@ -8,11 +8,13 @@
 </head>
 <body>
 <span th:replace="fragments/header :: header">Missing header</span>
-<form action="/addScript" method="get">
-    <input type="text" name="scriptPath" placeholder="Script path">
-    <input type="submit" value="Submit">
-    <p>Make sure that for file .../script.sh descriptor file .../script.sh.desc exists. </p>
-</form>
+<div>
+    <form action="/addScript" method="get">
+        <input type="text" name="scriptPath" placeholder="Script path">
+        <input type="submit" value="Submit">
+        <p>Make sure that for file .../script.sh descriptor file .../script.sh.desc exists. </p>
+    </form>
+</div>
 <span th:if="${tried}">
     <span th:if="${failed}">
         Failed to add, <span th:if="${!scriptExists}">script file does not exist</span>
