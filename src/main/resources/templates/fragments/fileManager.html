@@ -38,6 +38,7 @@
                         <span th:with='splits=${file.toString().split("\.")}' th:text="${splits.length>1 ? splits[splits.length-1] : '-'}"></span>
                         <span th:text="file"></span>
                         <span th:text="${file}"></span>
+                        <button type="button" th:with="backs='\\', forws='/'" th:attr="onclick=|useFile('${file.toString().replace(backs, forws)}')|">X</button>
                     </li>
                 </th:block>
             </div>
@@ -78,10 +79,9 @@
                     lis.push(ul.childNodes[i]);
                 } else {
                     new_ul.appendChild(ul.childNodes[i]);
-                }
-                    
+                }                    
             }
-            // Sort the lis in descending order
+            lis.reverse();
             lis.sort(fun);
 
             // Add them into the ul in order

@@ -9,8 +9,28 @@
     <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        var lastUsed = 0;
+        function useFile(file) {
+            console.log(file);
+            document.getElementsByClassName("inputArgument")[lastUsed].value=file;
+            lastUsed++;
+            lastUsed %= document.getElementsByClassName("inputArgument").length;
+        }
+        function setLastUsed(by) {
+            for (let i = 0; i < document.getElementsByClassName("inputArgument").length; i++) {
+                const element = document.getElementsByClassName("inputArgument")[i];
+                if (by==element){
+                    lastUsed=i;
+                    return 1;
+                }
+            }
+            return 0;
+        }
+    </script>
 </head>
 <body>
+
 <span th:replace="fragments/header :: header">Missing header</span>
 
 <div th:if="${backend!=null}"  style="text-align:right;">
@@ -32,8 +52,8 @@
 <div class="row">
     <div class="column1" th:if="${script!=null}">
         <form action="/runningScripts" method="get">
-            Config file:<input type="text" name="configFile" placeholder="-"><br>
-            <table>
+            Config file:<input class="inputArgument" onfocus='setLastUsed(this)' type="text" name="configFile" placeholder="-"><br>
+            <table id="arguments">
                 <tr>
                     <th></th>
                     <th th:each="i:${script.getInputs()}" th:text="${i.toString()}"></th>
@@ -52,7 +72,7 @@
                                         th:value="${v}"></option>
                             </select>
                         </datalist>
-                        <input type="text" th:name="${i.toString()+'1'}" th:list="${i.toString()}">
+                        <input class="inputArgument" onfocus='setLastUsed(this)' type="text" th:name="${i.toString()+'1'}" th:list="${i.toString()}">
                     </td>
                 </tr>
                 <tr>
@@ -65,7 +85,7 @@
                                         th:value="${v}"></option>
                             </select>
                         </datalist>
-                        <input type="text" th:name="${i.toString()+'2'}" th:list="${i.toString()}">
+                        <input class="inputArgument" onfocus='setLastUsed(this)' type="text" th:name="${i.toString()+'2'}" th:list="${i.toString()}">
                     </td>
                 </tr>
                 <tr>
@@ -78,7 +98,7 @@
                                         th:value="${v}"></option>
                             </select>
                         </datalist>
-                        <input type="text" th:name="${i.toString()+'3'}" th:list="${i.toString()}">
+                        <input class="inputArgument" onfocus='setLastUsed(this)' type="text" th:name="${i.toString()+'3'}" th:list="${i.toString()}">
                     </td>
                 </tr>
             </table>
