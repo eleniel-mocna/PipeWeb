@@ -12,25 +12,37 @@ public class DefaultFolderTree implements FolderTree{
     private File root;
     private List<DefaultFolderTree> subFolders;
     private List<File> files;
-
-    public DefaultFolderTree(File root) {
+    
+    public DefaultFolderTree(File root, int layers) {
         try {
             this.root = root.getCanonicalFile();
+            System.err.println(root + " was loaded!");
+            System.err.println(root.lastModified() + " modified.");
         } catch (IOException e) {
             System.err.println("IOException occurred:" + e.getStackTrace());
         }
         File[] children = root.listFiles();
-        subFolders = children == null ? new LinkedList<>()
-                : Arrays.stream(children).filter(File::isDirectory)
-                .map(DefaultFolderTree::new)
-                .collect(Collectors.toList());
         files = children == null ? new LinkedList<>()
-                : Arrays.stream(children).filter(File::isFile)
-                .map(File::getAbsoluteFile)
-                .collect(Collectors.toList());
+            : Arrays.stream(children).filter(File::isFile)
+            .map(File::getAbsoluteFile)
+            .collect(Collectors.toList());
+        if (layers!=0){                        
+            subFolders = children == null ? new LinkedList<>()
+                    : Arrays.stream(children).filter(File::isDirectory)
+                    .map(t -> new DefaultFolderTree(t,layers-1))
+                    .collect(Collectors.toList());
+        } else {
+            subFolders = new LinkedList<>();
+        }
+    }
+    public DefaultFolderTree(String root, int layers){
+        this(new File(root), layers);
+    }
+    public DefaultFolderTree(File root){
+        this(root, 1);
     }
     public DefaultFolderTree(String root){
-        this(new File(root));
+        this(root, 1);
     }
 
     @Override

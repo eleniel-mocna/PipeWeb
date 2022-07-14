@@ -5,56 +5,56 @@
 </head>
 <body>
 
-<span th:fragment="directory (root)" class="fileTreeDirectory">
-
-    <details open>
-        <summary>
-            <span th:text="${root.root().getName()}" style="color:rgb(0, 182, 161);"></span>
-            <span th:text="${dateFormat.format(root.root().lastModified())}"></span>
-            <span th:text="${root.root().length()} + bytes"></span>
-            <span th:text="directory"></span>
-            <span th:text="dir"></span>
-            <span th:text="${root.toString()}" style="color:rgb(0, 166, 255);"></span>
-        </summary>
-        <ul class="folderTree">
-            <!-- <ul> je unordered; <ol> je ordered -->
-            <span th:each="dir : ${root.folders()}">
-                <li th:replace="fragments/fileManager :: directory (${dir})"></li>
-                <!--/* <li> definuje list item; th = heading; directory - rekurze */-->
-                <!--/* sem přidat info: formát?, velikost, datum poslední úpravy */-->
-            </span>
-            <div class="folderTreeFiles">
-                <th:block th:each="file : ${root.files()}">
-                    <li style="color:rgb(255, 0, 247);"
-                        th:with='splits=${file.toString().split("\.")}'
-                        th:attr="data-name=${file.getName()},
-                            data-modified=${file.lastModified()},
-                            data-size=${file.length()},
-                            data-ext=${splits.length>1 ? splits[splits.length-1] : '-'}"
-                        >
-                        <span th:text="${file.getName()}"></span>
-                        <span th:text="${dateFormat.format(file.lastModified())}"></span>                        
-                        <span th:text="${file.length()} + bytes"></span>
-                        <span th:with='splits=${file.toString().split("\.")}' th:text="${splits.length>1 ? splits[splits.length-1] : '-'}"></span>
-                        <span th:text="file"></span>
-                        <span th:text="${file}"></span>
-                        <button type="button" th:with="backs='\\', forws='/'" th:attr="onclick=|useFile('${file.toString().replace(backs, forws)}')|">X</button>
-                    </li>
-                </th:block>
-            </div>
-        </ul>
-    </details>
-</span>
+<th:block th:fragment="directory (root, offset)" class="fileTreeDirectory">
+    <tr class="folderTree"
+        th:with='splits=${root.root().toString().split("\.")}'
+        th:attr="data-name=${root.root().getName()},
+        data-modified=${root.root().lastModified()},
+        data-size=${root.root().length()}">
+        <td th:text="${offset + root.root().getName()}" style="color:rgb(0, 182, 161);"></td>
+        <td>DIR</td>
+        <td th:text="${root.root().length()}"></td>
+        <td th:text="${dateFormat.format(root.root().lastModified())}"></td>
+        <td><button type="button" th:with="backs='\\', forws='/'" th:attr="onclick=|useFile('${root.toString().replace(backs, forws)}')|">X</button></td>
+        <td>
+            <form hx-post="/fileTreeView  "
+                hx-trigger="submit"
+                hx-target="#fileManagerRoot"
+                hx-swap="innerHTML">
+                <button type="submit" name="path" th:value="${root}">Go</button>
+            </form>
+        </td>
+    </tr>
+    <!-- <tr><td colspan="6"><table style="width: 100%;"> -->
+        <th:block th:each="dir : ${root.folders()}">
+            <th:block th:replace="fragments/fileManager :: directory (${dir}, ${offset + '..'})"></th:block>
+        </th:block>
+        <th:block th:each="file : ${root.files()}">
+            <tr style="color:rgb(255, 0, 247);"
+                th:with='splits=${file.toString().split("\.")}'
+                th:attr="data-name=${file.getName()},
+                    data-modified=${file.lastModified()},
+                    data-size=${file.length()},
+                    data-ext=${splits.length>1 ? splits[splits.length-1] : '-'}"
+                >
+            <td th:text="${offset + file.getName()}"></td>
+            <td th:with='splits=${file.toString().split("\.")}' th:text="${splits.length>1 ? splits[splits.length-1] : '-'}"></td>
+            <td th:text="${file.length()}"></td>
+            <td th:text="${dateFormat.format(file.lastModified())}"></td>
+            <td>
+                <button type="button" th:with="backs='\\', forws='/'" th:attr="onclick=|useFile('${file.toString().replace(backs, forws)}')|">X</button>
+            </td>
+            <td></td>
+        </th:block>
+    <!-- </table></td></tr> -->
+</th:block>
 
 <span th:fragment="test">
     <p>This has been tested!</p>
 </span>
 
-<span th:fragment="fileManager (root)">
-    <ul>
-        <li th:if="${root!=null}" th:replace="fragments/fileManager :: directory(${root})"></li>
-    </ul>
-    <p class="mojeP" id="demo">My first<span>paragraph.</span></p>
+<div id="fileManagerRoot" th:fragment="fileManager (root)">
+    <script src="https://unpkg.com/htmx.org@1.8.0" integrity="sha384-cZuAZ+ZbwkNRnrKi05G/fjBX+azI9DNOkNYysZ0I/X5ZFgsmMiBXgDZof30F5ofc" crossorigin="anonymous"></script>
     <script>
         function filterTrees(what) {
             document.getElementById("demo").innerHTML=what;
@@ -90,7 +90,12 @@
                 }
             ul.parentNode.replaceChild(new_ul, ul);
         }
-        function sortFileManager(by, ascending) {
+        var sortingBy=1;
+        function sortFileManager(by){
+            sortFileManager1(by, sortingBy);
+            console.log(sortingBy);
+        }
+        function sortFileManager1(by, ascending) {
             var all = document.getElementsByClassName("folderTreeFiles");
             var fun = by=="name" || by=="ext" ? function(a, b){
                 return ($(a).data(by)<$(b).data(by)?-ascending:($(a).data(by)>$(b).data(by)?ascending:0));  
@@ -105,18 +110,32 @@
             }
         }
     </script>
+    <p class="mojeP" id="demo">Filter</p>
     <input type="text" oninput='filterTrees(this.value)'>
-    <button type="button" onclick="sortFileManager('name', 1)">Sort by name asc</button>
-    <button type="button" onclick="sortFileManager('name', -1)">Sort by name desc</button>
-    <button type="button" onclick="sortFileManager('size', 1)">Sort by size asc</button>
-    <button type="button" onclick="sortFileManager('size', -1)">Sort by size desc</button>
-    <button type="button" onclick="sortFileManager('ext', 1)">Sort by ext asc</button>
-    <button type="button" onclick="sortFileManager('ext', -1)">Sort by ext desc</button>
-    <button type="button" onclick="sortFileManager('modified', 1)">Sort by lastModified asc</button>
-    <button type="button" onclick="sortFileManager('modified', -1)">Sort by lastModified desc</button>
+    <table>
+        <tr>
+            <th><button type="button" onclick="sortFileManager('name')">Name</button></th>
+            <th><button type="button" onclick="sortFileManager('size')">Size</button></th>
+            <th><button type="button" onclick="sortFileManager('ext')">Ext</button></th>
+            <th><button type="button" onclick="sortFileManager('modified')">Date</button></th>
+            <td></td><td></td>
+        </tr>    
+        <tr>
+            <td>
+            <form hx-post="/fileTreeView  "
+                hx-trigger="submit"
+                hx-target="#fileManagerRoot"
+                hx-swap="innerHTML">
+        <button type="submit" name="path" th:value="${root.root().getParent()}">..</button>
+            </form>
+            </td>
+            <td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr th:if="${root!=null}" th:replace="fragments/fileManager :: directory(${root}, '')"></tr>  
+    </table>
 
     
-</span>
+</div>
 
 </body>
 </html>
