@@ -5,12 +5,10 @@ $ mvn spring-boot:run
 ```
 ## TODO (BETA 1.0)
 
-- Push here the finished version
-- Add switching root in the FileTreeView
 - Add Refresh for FileTreeView
-- Restrict predictions for K layers of the FileTree
+- Apply predictions for K layers of the FileTree
 - Put the FileTreeView into a container providing scrolling etc.
-- Refactor FileTreeView into a table (sorting buttons, searchbar at the top)
-- Sort and filter files AND folders
+- Sort out a table of FileTreeView (try hard setting a width for each column and do tables in a table...)
+- Repair sort and filter
 - Make sure that the output function works out of FTV
 - Add auto-refreshes to RUNs
