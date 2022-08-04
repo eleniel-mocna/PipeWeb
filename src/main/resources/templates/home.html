@@ -10,7 +10,9 @@
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
-        var lastUsed = 0;
+        let lastUsed = 0;
+
+        // noinspection JSUnusedGlobalSymbols
         function useFile(file) {
             console.log(file);
             document.getElementsByClassName("inputArgument")[lastUsed].value=file;
@@ -20,7 +22,7 @@
         function setLastUsed(by) {
             for (let i = 0; i < document.getElementsByClassName("inputArgument").length; i++) {
                 const element = document.getElementsByClassName("inputArgument")[i];
-                if (by==element){
+                if (by===element){
                     lastUsed=i;
                     return 1;
                 }
@@ -52,7 +54,10 @@
 <div class="row">
     <div class="column1" th:if="${script!=null}">
         <form action="/runningScripts" method="get">
-            Config file:<input class="inputArgument" onfocus='setLastUsed(this)' type="text" name="configFile" placeholder="-"><br>
+            <label>
+                Config file:
+                <input class="inputArgument" onfocus='setLastUsed(this)' type="text" name="configFile" placeholder="-">
+            </label><br>
             <table id="arguments">
                 <tr>
                     <th></th>

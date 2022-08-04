@@ -12,8 +12,15 @@ public class DefaultFolderTree implements FolderTree{
     private File root;
     private List<DefaultFolderTree> subFolders;
     private List<File> files;
-    
+    private int layers;
+
     public DefaultFolderTree(File root, int layers) {
+        this.root = root;
+        this.layers = layers;
+        refresh();
+    }
+
+    public void refresh() {
         try {
             this.root = root.getCanonicalFile();
             System.err.println(root + " was loaded!");
@@ -23,18 +30,19 @@ public class DefaultFolderTree implements FolderTree{
         }
         File[] children = root.listFiles();
         files = children == null ? new LinkedList<>()
-            : Arrays.stream(children).filter(File::isFile)
-            .map(File::getAbsoluteFile)
-            .collect(Collectors.toList());
-        if (layers!=0){                        
+                : Arrays.stream(children).filter(File::isFile)
+                .map(File::getAbsoluteFile)
+                .collect(Collectors.toList());
+        if (layers != 0) {
             subFolders = children == null ? new LinkedList<>()
                     : Arrays.stream(children).filter(File::isDirectory)
-                    .map(t -> new DefaultFolderTree(t,layers-1))
+                    .map(t -> new DefaultFolderTree(t, layers - 1))
                     .collect(Collectors.toList());
         } else {
             subFolders = new LinkedList<>();
         }
     }
+
     public DefaultFolderTree(String root, int layers){
         this(new File(root), layers);
     }

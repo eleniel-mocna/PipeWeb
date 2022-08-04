@@ -102,19 +102,7 @@ public class Backend {
         }
         return ret;
     }
-//    private boolean saveScripts(boolean overwrite){
-//        ArrayList<Script> old_scripts = loadScripts();
-//        if (!overwrite && old_scripts.size() >scripts.size()){
-//            return false;
-//        }
-//        try(ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(scripts_file))) {
-//            os.writeObject(scripts);
-//            return true;
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
+
     public boolean addScript(Script newScript, boolean hardCopy) {  //TODO: Make this nicer
         String scriptName = newScript.getPath().getName();
         for (Script s :
@@ -155,8 +143,7 @@ public class Backend {
             }
         }
 
-        boolean ret = scripts.add(newScript);
-        return ret;
+        return scripts.add(newScript);
     }
     private void readObject(java.io.ObjectInputStream in)
             throws IOException, ClassNotFoundException{
@@ -177,6 +164,7 @@ public class Backend {
         folderTree = new DefaultFolderTree(homeDir);
     }
     public FolderTree getFolderTree(){
+        reloadFolderTree();
         return folderTree;
     }
 }

@@ -18,4 +18,5 @@ public interface FolderTree {
         return ret.stream().map(x -> root().toPath().relativize(x.toPath()).toFile()).collect(Collectors.toList());
     }
     File root();
+    void refresh();
 }

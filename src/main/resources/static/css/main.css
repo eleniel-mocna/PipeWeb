@@ -106,3 +106,23 @@ div {
   width: 65%;
 }
 
+.fileTable th {
+  position: relative;
+}
+
+.fileTable{
+  width: 70px;
+  height: 110px;
+  overflow: scroll;
+}
+
+.fileTable thead th { position: sticky; top: 0; z-index: 1; }
+
+/* Just common table stuff. Really. */
+table  { border-collapse: collapse; width: 100%; }
+th, td { padding: 1px 0px; }
+th     { background:#eee; }
+
+p.mojeP{
+  background: #0b2e13;
+}
