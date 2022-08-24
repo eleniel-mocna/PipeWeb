@@ -8,29 +8,41 @@
 
 <th:block th:fragment="directory (root, offset)" class="fileTreeDirectory">
     <!--/*@thymesVar id="root" type="cz.cuni.mff.soukups3.PipeWeb.FolderTree"*/-->
-    <tr class="folderTree"
+    <!--class="folderTree"-->
+    <!--XDDDDDDD nikdy nevis co ti kdo zmeni v kodu LOL HIHIHIHIHIHIHIH-->
+    <tr
+        class="fileTreeDirectory"
         th:with='splits=${root.root().toString().split("\.")}'
         th:attr="data-name=${root.root().getName()},
         data-modified=${root.root().lastModified()},
         data-size=${root.root().length()}">
 
-        <td style="color:rgb(0, 182, 161); width: 300px"><form hx-post="/fileTreeView  "
+        <td style="color:rgb(0, 182, 161); width: 25%"><form hx-post="/fileTreeView  "
                                                                                               hx-trigger="submit"
                                                                                               hx-target="#fileManagerRoot"
                                                                                               hx-swap="innerHTML">
-            <button th:text="${offset + root.root().getName()}" type="submit" name="path" th:value="${root}">Go</button>
+            <div><button th:text="${offset + root.root().getName()}" type="submit" name="path" th:value="${root}">Go</button></div>
+            <!--folder button packed into div-->
+
         </form></td>
-        <td style="width: 100px">DIR</td>
-        <td style="width: 100px" th:text="${root.root().length()}"></td>
-        <td style="width: 100px" th:text="${dateFormat.format(root.root().lastModified())}"></td>
-        <td style="width: 100px">
+        <td style="width: 5%">DIR</td>
+        <td style="width: 30%" th:text="${root.root().length()}"></td>
+        <td style="width: 30%" th:text="${dateFormat.format(root.root().lastModified())}"></td>
+        <td style="width: 5%">
             <button type="button" th:with="backs='\\', forws='/'"
                     th:attr="onclick=|useFile('${root.toString().replace(backs, forws)}')|">X
             </button>
         </td>
+        <td style="width: 5%">
+            <!-- need to be repared!!! -->
+            <button type="submit" th:value="${root}">hide
+            </button>
+        </td>
 
     </tr>
-    <td colspan="5" style="width: 700px">
+
+    <!--Here starts the table-->
+    <td colspan="6">
         <table>
     <!-- <tr><td colspan="6"><table style="width: 100%;"> -->
     <th:block th:each="dir : ${root.folders()}">
@@ -38,22 +50,24 @@
     </th:block>
     <th:block th:each="file : ${root.files()}">
         <tr style="color:rgb(255, 0, 247);"
+            class="fileTreeDirectory"
             th:with='splits=${file.toString().split("\.")}'
             th:attr="data-name=${file.getName()},
                     data-modified=${file.lastModified()},
                     data-size=${file.length()},
                     data-ext=${splits.length>1 ? splits[splits.length-1] : '-'}"
         >
-            <td style="width: 300px" th:text="${offset + file.getName()}"></td>
-            <td style="width: 100px" th:with='splits=${file.toString().split("\.")}'
+            <td style="width: 25%" th:text="${offset + file.getName()}"></td>
+            <td style="width: 5%" th:with='splits=${file.toString().split("\.")}'
                 th:text="${splits.length>1 ? splits[splits.length-1] : '-'}"></td>
-            <td style="width: 100px" th:text="${file.length()}"></td>
-            <td style="width: 100px" th:text="${dateFormat.format(file.lastModified())}"></td>
-            <td style="width: 100px">
+            <td style="width: 30%" th:text="${file.length()}"></td>
+            <td style="width: 30%" th:text="${dateFormat.format(file.lastModified())}"></td>
+            <td style="width: 5%">
                 <button type="button" th:with="backs='\\', forws='/'"
                         th:attr="onclick=|useFile('${file.toString().replace(backs, forws)}')|">X
                 </button>
             </td>
+            <td style="width: 5%"></td>
     </th:block>
     <!-- </table></td></tr> -->
             </table>
@@ -73,19 +87,21 @@
     <input type="text" oninput='filterTrees(this.value)'>
     <table id="fileManagerTable" class="fileTable">
         <tr>
-            <th style="width: 300px">
-                <button type="button" onclick="sortFileManager('name')">Name</button>
+            <!--dát dohromady s main.css-->
+
+            <th style="width: 25%">
+                <div class="resizeDiv"><button type="button" onclick="sortFileManager('name')">Name</button></div>
             </th>
-            <th style="width: 100px">
-                <button type="button" onclick="sortFileManager('size')">Size</button>
+            <th style="width: 5%">
+                <div class="resizeDiv"><button type="button" onclick="sortFileManager('size')">Ext</button></div>
             </th>
-            <th style="width: 100px">
-                <button type="button" onclick="sortFileManager('ext')">Ext</button>
+            <th style="width: 30%">
+                <div class="resizeDiv"><button type="button" onclick="sortFileManager('ext')">Size</button></div>
             </th>
-            <th style="width: 100px">
-                <button type="button" onclick="sortFileManager('modified')">Date</button>
+            <th style="width: 30%">
+                <div class="resizeDiv"><button type="button" onclick="sortFileManager('modified')">Date</button></div>
             </th>
-            <th style="width: 100px">
+            <th style="width: 5%">
                 <form hx-post="/fileTreeView  "
                       hx-trigger="submit"
                       hx-target="#fileManagerRoot"
@@ -93,9 +109,17 @@
                     <button type="submit" name="path" th:value="${root}">R</button>
                 </form>
             </th>
+            <th style="width: 5%">
+                <form hx-post="/fileTreeView  "
+                      hx-trigger="submit"
+                      hx-target="#fileManagerRoot"
+                      hx-swap="innerHTML">
+                    <button type="submit" name="path" th:value="${root}">hide</button>
+                </form>
+            </th>
         </tr>
         <tr>
-            <td style="width: 300px">
+            <td style="width: 25%">
                 <form hx-post="/fileTreeView  "
                       hx-trigger="submit"
                       hx-target="#fileManagerRoot"
@@ -103,10 +127,11 @@
                     <button type="submit" name="path" th:value="${root.root().getParent()}">..</button>
                 </form>
             </td>
-            <td style="width: 100px"></td>
-            <td style="width: 100px"></td>
-            <td style="width: 100px"></td>
-            <td style="width: 100px"></td>
+            <td style="width: 5%"></td>
+            <td style="width: 30%"></td>
+            <td style="width: 30%"></td>
+            <td style="width: 5%"></td>
+            <td style="width: 5%"></td>
         </tr>
         <tr th:if="${root!=null}" th:replace="fragments/fileManager :: directory(${root}, '')"></tr>
     </table>

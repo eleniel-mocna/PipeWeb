@@ -65,6 +65,18 @@ input[type=text]:focus {
 }
 
 /* Design for buttons */
+button {
+  background-color: #22577a;
+  border: none;
+  border-radius: 3px;
+  color: white;
+  padding: 6px 12px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+  transition-duration: 0.2s;
+}
+
 input[type=button], input[type=submit], input[type=reset] {
   background-color: #04AA6D;
   border: none;
@@ -79,6 +91,11 @@ input[type=button], input[type=submit], input[type=reset] {
 }
 
 /* Button change if clicked */
+button:hover {
+  background-color: #347ebb;
+  /* box-shadow: 0 12px 12px 0 rgba(0,0,0,0.24), 0 12px 12px 0 rgba(0,0,0,0.19); */
+}
+
 input[type=submit]:hover {
   background-color: #047eaa;
   color: white;
@@ -111,18 +128,46 @@ div {
 }
 
 .fileTable{
-  width: 70px;
+  /* because of resizing */
+  width: 700px;
   height: 110px;
   overflow: scroll;
 }
+
 
 .fileTable thead th { position: sticky; top: 0; z-index: 1; }
 
 /* Just common table stuff. Really. */
 table  { border-collapse: collapse; width: 100%; }
-th, td { padding: 1px 0px; }
-th     { background:#eee; }
+th, td { padding: 0px; }
+/*th     { background: #139d8c; }*/
 
 p.mojeP{
-  background: #0b2e13;
+  background: #0c655a;
+}
+
+/* Resizing of the table */
+.table th {
+  position: relative;
+}
+
+.resizer {
+  /* Displayed at the right side of column */
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  cursor: col-resize;
+  user-select: none;
+}
+.resizer:hover,
+.resizing {
+  border-right: 3px solid #0c655a;
+}
+
+
+/* class pro divy....mění velikost podle uživatele - není konečné řešení*/
+.resizeDiv {
+  resize: horizontal;
+  overflow: auto;
 }
