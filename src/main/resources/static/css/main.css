@@ -36,7 +36,7 @@ h2{
   content: "\25B6";
   color: black;
   display: inline-block;
-  margin-right: 6px;
+  margin-right: 2px;
 }
 
 /* Rotate the caret/arrow icon when clicked on (using JavaScript) */
@@ -68,23 +68,23 @@ input[type=text]:focus {
 button {
   background-color: #22577a;
   border: none;
-  border-radius: 3px;
+  border-radius: 2px;
   color: white;
-  padding: 6px 12px;
+  padding: 2px 6px;
   text-decoration: none;
-  margin: 4px 2px;
+  margin: 2px 1px;
   cursor: pointer;
-  transition-duration: 0.2s;
+  transition-duration: 0.4s;
 }
 
 input[type=button], input[type=submit], input[type=reset] {
   background-color: #04AA6D;
   border: none;
-  border-radius: 3px;
+  border-radius: 2px;
   color: white;
-  padding: 6px 12px;
+  padding: 2px 6px;
   text-decoration: none;
-  margin: 4px 2px;
+  margin: 2px 1px;
   cursor: pointer;
   transition-duration: 0.4s;
   /* border: 2px solid #555; */
@@ -104,7 +104,7 @@ input[type=submit]:hover {
 
 /* Padding */
 div {
-  padding: 10px 20px 10px;
+  padding: 1px 2px 1px;
 }
 
 
@@ -115,12 +115,15 @@ div {
   clear: both;
 }
 .column1 {
+  overflow: scroll;
   float: left;
-  width: 35%;
+  width: 49%;
 }
 .column2 {
+  overflow: scroll;
   float: left;
-  width: 65%;
+  width: 49%;
+  height: 80vh;
 }
 
 .fileTable th {
@@ -138,10 +141,37 @@ div {
 .fileTable thead th { position: sticky; top: 0; z-index: 1; }
 
 /* Just common table stuff. Really. */
-table  { border-collapse: collapse; width: 100%; }
-th, td { padding: 0px; }
+table  { border-collapse: collapse; width: 100%; table-layout: initial}
+th, td {
+  white-space:normal;
+  padding: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+td.currentDirectory {
+  background: #818181;
+  color: #0000ff;
+  font-size: 12px;
+  vertical-align: top;
+  height: min-content;
+}
+button.currentDirectory {
+  font-size: 12px;
+  overflow: hidden;
+  background-color: #22577a;
+  border: none;
+  border-radius: 1px;
+  color: white;
+  padding: 1px 1px;
+  text-decoration: none;
+  margin: 1px 1px;
+  cursor: pointer;
+  transition-duration: 0.2s;
+}
 /*th     { background: #139d8c; }*/
-
+tr {
+  display: table-row;
+}
 p.mojeP{
   background: #0c655a;
 }
@@ -169,5 +199,6 @@ p.mojeP{
 /* class pro divy....mění velikost podle uživatele - není konečné řešení*/
 .resizeDiv {
   resize: horizontal;
-  overflow: auto;
+  width: min-content;
+  overflow: hidden;
 }

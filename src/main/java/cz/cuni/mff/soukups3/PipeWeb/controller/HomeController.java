@@ -18,6 +18,9 @@ public class HomeController {
     @GetMapping("/home")
     public String home(HttpSession session, Model model,
                        @RequestParam(name = "script", required = false, defaultValue = "") String script){
+        if (session.getAttribute("userName")==null){
+            return new UsersController().login(null, session, model);
+        }
         Backend backend =  Backend.forName((String) session.getAttribute("userName"));
         System.err.println("Called home from: " + session.getAttribute("userName"));
         if (!"".equals(script)){
