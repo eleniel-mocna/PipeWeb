@@ -18,10 +18,11 @@ public class HomeController {
     @GetMapping("/home")
     public String home(HttpSession session, Model model,
                        @RequestParam(name = "script", required = false, defaultValue = "") String script){
-        if (session.getAttribute("userName")==null){
-            return new UsersController().login(null, session, model);
+        System.err.println("BLABLA: " + session.getAttribute("userName"));
+        if (Backend.forName(session)==null){
+            return new UsersController().login(null, session, model, "false");
         }
-        Backend backend =  Backend.forName((String) session.getAttribute("userName"));
+        Backend backend = Backend.forName(session);
         System.err.println("Called home from: " + session.getAttribute("userName"));
         if (!"".equals(script)){
             model.addAttribute("script",backend.getScript(script));
@@ -34,9 +35,12 @@ public class HomeController {
     @GetMapping("/addScript")
     public String addScript(HttpSession session, Model model,
                             @RequestParam(name = "scriptPath", required = false, defaultValue = "") String scriptPath){
+        Backend backend = Backend.forName(session);
+        if (backend==null){
+            return "/login";
+        }
         if (!("".equals(scriptPath))){
             model.addAttribute("tried", true);
-            Backend backend = Backend.forName((String) session.getAttribute("userName"));
             File descriptorFile = new File(scriptPath+".desc");
             File scriptFile = new File(scriptPath);
             boolean failed = false;
@@ -65,14 +69,17 @@ public class HomeController {
     public String runningScripts(HttpSession session, Model model,
                                  @RequestParam(name = "script", required = false, defaultValue = "") String scriptName,
                                  @RequestParam Map<String, String> allRequestParams){
-        Backend backend = Backend.forName((String) session.getAttribute("userName"));
+        Backend backend = Backend.forName(session);
+        if (backend==null){
+            return "/login";
+        }
         backend.reloadFolderTree();
         Script script;
         if (!"".equals(scriptName)) {
             if ((script=backend.getScript(scriptName))!=null){
                 backend.runs.add(script.run(backend.getFolderTree().root(), allRequestParams.keySet().stream()
                         .filter(x->!"script".equals(x))
-                        .map(x -> allRequestParams.get(x)).collect(Collectors.toList())));
+                        .map(allRequestParams::get).collect(Collectors.toList())));
             }
         }
         model.addAttribute("backend", backend);

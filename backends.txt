@@ -1,1 +1,2 @@
-defaultUser;defaultUser/scripts;defaultUser/
+defaultUser2;03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4;defaultUser2\scripts;C:\Users\Samuel Soukup\Documents\Skola\PipeWeb\defaultUser2
+defaultUser;03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4;C:\Users\Samuel Soukup\Documents\Skola\PipeWeb\defaultUser\scripts;C:\Users\Samuel Soukup\Documents\Skola\PipeWeb\defaultUser

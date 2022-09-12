@@ -3,20 +3,42 @@ package cz.cuni.mff.soukups3.PipeWeb;
 import org.apache.commons.compress.utils.FileNameUtils;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class Backend {
     private final static String DB_PATH = "backends.txt";
     private final static Map<String, Backend> backends;
     public final String name;
+    private final String encodedPass;
     private transient ArrayList<Script> scripts;
     public ArrayList<ScriptRun> runs = new ArrayList<>();
     private File homeDir;
     private final File scriptsFolder;
     private FolderTree folderTree;
+
+    private static String bytesToHex(byte[] hash) {
+        StringBuilder hexString = new StringBuilder(2 * hash.length);
+        for (byte b : hash) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+        return hexString.toString();
+    }
+
+    private static String encryptPassword(String readablePassword) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] encodedHash = digest.digest(readablePassword.getBytes());
+        return bytesToHex(encodedHash);
+    }
 
     static {
         backends = new HashMap<>();
@@ -26,12 +48,13 @@ public class Backend {
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] backendInfo = line.split(";");
-                    if (backendInfo.length == 3) {
+                    if (backendInfo.length == 4) {
                         backends.put(backendInfo[0],
                                 new Backend(
                                         backendInfo[0],
-                                        new File(backendInfo[1]),
-                                        new File(backendInfo[2])));
+                                        backendInfo[1],
+                                        new File(backendInfo[2]),
+                                        new File(backendInfo[3])));
                     }
                 }
             } catch (IOException e) {
@@ -40,14 +63,17 @@ public class Backend {
 
         }
     }
-    public Backend(String name,
-                   File scripts,
-                   File homeDir){
+
+    private Backend(String name,
+                    String encodedPass,
+                    File scripts,
+                    File homeDir) {
         this.name = name;
+        this.encodedPass = encodedPass;
         try {
             this.homeDir = homeDir.getCanonicalFile();
         } catch (IOException e) {
-            this.homeDir=homeDir;
+            this.homeDir = homeDir;
         }
         this.homeDir.mkdir();
         scriptsFolder = new File(homeDir + File.separator + "scripts");
@@ -58,17 +84,43 @@ public class Backend {
         }
         this.scripts = loadScripts();
     }
-    public static Collection<Backend> list(){
+
+    public static Collection<Backend> list() {
         return backends.values();
     }
-    public static Backend forName(String name){
-        return backends.get(name);
+
+    public static Backend forName(String name, String password) {
+        Backend theBackend = backends.get(name);
+        if (theBackend == null) {
+            return null;
+        }
+        try {
+            if (theBackend.encodedPass.equals(encryptPassword(password))) {
+                return theBackend;
+            }
+        } catch (NoSuchAlgorithmException e) {
+            System.err.println("SHA not found");
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 
-    public static boolean createBackend(String name, String path) throws KeyAlreadyExistsException {
-        if (backends.get(name)==null){
+    public static Backend forName(HttpSession session) {
+        return backends.get((String) session.getAttribute("userName"));
+    }
+
+    public static boolean createBackend(String name, String unEncodedPass, String path) throws KeyAlreadyExistsException {
+        String encodedPass;
+        try {
+            encodedPass = encryptPassword(unEncodedPass);
+        } catch (NoSuchAlgorithmException e) {
+            System.err.println("SHA not found!");
+            throw new RuntimeException(e);
+        }
+        if (backends.get(name) == null) {
             Backend b = new Backend(name,
-                    new File(path+File.separator+".scripts"),
+                    encodedPass,
+                    new File(path + File.separator + ".scripts"),
                     new File(path));
             backends.put(name, b);
             saveBackends();
@@ -76,10 +128,18 @@ public class Backend {
         }
         return false;
     }
-    public static void saveBackends(){
+
+    public static void saveBackends() {
         StringBuffer ret = new StringBuffer();
-        backends.values().forEach(x -> ret.append(x.name+";"+x.scriptsFolder.toString()+";"+x.homeDir+System.lineSeparator()));
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH))) {
+        backends.values().forEach(x -> ret.append(x.name)
+                .append(";")
+                .append(x.encodedPass)
+                .append(";")
+                .append(x.scriptsFolder.toString())
+                .append(";")
+                .append(x.homeDir)
+                .append(System.lineSeparator()));
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH))) {
             bw.write(String.valueOf(ret));
         } catch (IOException e) {
             e.printStackTrace();
@@ -90,10 +150,10 @@ public class Backend {
         return scripts;
     }
 
-    private ArrayList<Script> loadScripts(){ //TODO: test this
+    private ArrayList<Script> loadScripts() { //TODO: test this
         ArrayList<Script> ret = new ArrayList<>();
-        for (File file : Objects.requireNonNull(scriptsFolder.listFiles())){
-            if (file.getName().matches(".*\\.desc")){
+        for (File file : Objects.requireNonNull(scriptsFolder.listFiles())) {
+            if (file.getName().matches(".*\\.desc")) {
                 ret.add(Script.fromConfig(new File(file.getParentFile().toString()
                                 + File.separator
                                 + FileNameUtils.getBaseName(file.toString())),
@@ -107,12 +167,12 @@ public class Backend {
         String scriptName = newScript.getPath().getName();
         for (Script s :
                 scripts) {
-            if (scriptName.equals(s.getPath().getName())){
+            if (scriptName.equals(s.getPath().getName())) {
                 return false;
             }
         }
         File newScriptFile = new File(scriptsFolder + File.separator + scriptName);
-        File oldDescFile = new File(newScript.getPath().getPath()+".desc");
+        File oldDescFile = new File(newScript.getPath().getPath() + ".desc");
         File newDescFile = new File(scriptsFolder + File.separator + scriptName + ".desc");
         try {
             if (hardCopy) {
@@ -145,11 +205,13 @@ public class Backend {
 
         return scripts.add(newScript);
     }
+
     private void readObject(java.io.ObjectInputStream in)
-            throws IOException, ClassNotFoundException{
+            throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         this.scripts = loadScripts();
     }
+
     public Script getScript(String name) {
         for (Script s :
                 scripts) {
@@ -160,10 +222,11 @@ public class Backend {
         return null;
     }
 
-    public void reloadFolderTree(){
+    public void reloadFolderTree() {
         folderTree = new DefaultFolderTree(homeDir);
     }
-    public FolderTree getFolderTree(){
+
+    public FolderTree getFolderTree() {
         reloadFolderTree();
         return folderTree;
     }

@@ -7,23 +7,23 @@
     <title>NGS add user</title>
 
     <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css?x=4}"/>
 
 </head>
 
 <body>
 
-<span th:replace="fragments/header :: header">Missing header</span>
+<th:block th:replace="fragments/header :: header">Missing header</th:block>
 
-<main role="main" class="container">
-
-<form action="/addUser" method="get">
-    <input type="text" name="name" placeholder="Name">
-    <input type="text" name="path" placeholder="Path">
-    <input type="submit" value="Submit">
-</form>
-<div style="background-color: green" th:if="${added}" th:text="${'Successfully added user ' + name}"></div>
-<div style="background-color: red" th:if="${triedToAdd && !added}">Failure!</div>
+<main role="main" class="container" style="margin-top: 50px">
+    <form action="/addUser" method="post">
+        <input type="text" name="name" placeholder="Name">
+        <input type="password" name="pass" placeholder="Password">
+        <input type="text" name="path" placeholder="Path">
+        <input type="submit" value="Submit">
+    </form>
+    <div style="background-color: green" th:if="${added}" th:text="${'Successfully added user ' + name}"></div>
+    <div style="background-color: red" th:if="${triedToAdd && !added}">Failure!</div>
 </main>
 <!-- /.container -->
 

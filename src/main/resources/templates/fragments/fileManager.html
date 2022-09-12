@@ -92,20 +92,14 @@
                 <div class="resizeDiv"><button type="button" onclick="sortFileManager('modified')">Date</button></div>
             </th>
             <th >
-                <form hx-post="/fileTreeView  "
+                <form id="refresherForm" hx-post="/fileTreeView  "
                       hx-trigger="submit"
                       hx-target="#fileManagerRoot"
                       hx-swap="innerHTML">
                     <button type="submit" name="path" th:value="${root}">R</button>
                 </form>
             </th>
-            <th >
-<!--                <form hx-post="/fileTreeView  "
-                      hx-trigger="submit"
-                      hx-target="#fileManagerRoot"
-                      hx-swap="innerHTML">
-                    <button type="submit" name="path" th:value="${root}">hide</button>
-                </form>-->
+            <th>
             </th>
         </tr>
         <tr>

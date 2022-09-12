@@ -94,7 +94,7 @@
 
 <span th:replace="fragments/header :: header">Missing header</span>
 
-<div th:if="${backend!=null}"  style="text-align:right;">
+<div style="text-align:right; margin-top: 50px">
     Hello, <span th:text="${backend.name}">placeholder</span>! <br><a href="/addScript">Add a script.</a><br>
     <ul th:each="s : ${backend.getScripts()}"  style="text-align:left;">
         <li>
@@ -104,9 +104,6 @@
         </li>
     </ul>
 </div>
-<span th:if="${backend==null}">
-    <a href="/">No user found, go log in!</a>
-</span>
 <hr><hr>
 
 
