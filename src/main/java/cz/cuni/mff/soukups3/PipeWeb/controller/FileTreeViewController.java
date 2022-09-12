@@ -1,19 +1,20 @@
 package cz.cuni.mff.soukups3.PipeWeb.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-
-import javax.servlet.http.HttpSession;
-
+import cz.cuni.mff.soukups3.PipeWeb.DefaultFolderTree;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import cz.cuni.mff.soukups3.PipeWeb.DefaultFolderTree;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 
+/**
+ * This controller takes care of FileTreeView HTMX AJAX for fileTreeView explorer
+ */
 @Controller
 public class FileTreeViewController {
     @RequestMapping(value="/fileTreeView",  method = RequestMethod.POST)

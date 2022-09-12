@@ -11,6 +11,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpSession;
+
+/**
+ * This controller takes care of user management (logging in, authorization, adding users etc.)
+ */
 @Controller("/")
 public class UsersController {
     @RequestMapping({"/"})

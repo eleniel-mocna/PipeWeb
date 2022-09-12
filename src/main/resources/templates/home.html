@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>NGS home</title>
@@ -145,7 +145,7 @@
     </div>
 
     <div class="column2">
-        <ul th:replace="fragments/fileManager :: fileManager(${backend.getFolderTree()})"></ul>
+        <th:block th:replace="fragments/fileManager :: fileManager(${backend.getFolderTree()})"></th:block>
     </div>
 </div>
 

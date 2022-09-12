@@ -8,17 +8,29 @@
 </head>
 <body>
 <span th:replace="fragments/header :: header">Missing header</span>
-<form action="/addScript" method="get">
-    <input type="text" name="scriptPath" placeholder="Script path">
-    <input type="submit" value="Submit">
-    <p>Make sure that for file .../script.sh descriptor file .../script.sh.desc exists. </p>
-</form>
-<span th:if="${tried}">
-    <span th:if="${failed}">
-        Failed to add, <span th:if="${!scriptExists}">script file does not exist</span>
-        <span th:if="${!descriptorExists}">descriptor file does not exist</span>.
-    </span>
-    <span th:if="${!failed}">Successfully added a new script!</span>
-</span>
+<main style="margin-top: 50px">
+    <script>
+        function useFile(file) {
+            document.getElementsByClassName("inputArgument")[0].value = file;
+        }
+    </script>
+    <div class="column1" style="overflow: hidden">
+        <form action="/addScript" method="get">
+            <input type="text" name="scriptPath" class="inputArgument" placeholder="Script path">
+            <input type="submit" value="Submit">
+            <p>Make sure that for file .../script.sh descriptor file .../script.sh.desc exists. </p>
+        </form>
+        <div th:if="${tried}">
+            <div th:if="${failed}">
+                Failed to add, <span th:if="${!scriptExists}">script file does not exist</span>
+                <span th:if="${!descriptorExists}">descriptor file does not exist</span>.
+            </div>
+            <span th:if="${!failed}">Successfully added a new script!</span>
+        </div>
+    </div>
+    <div class="column2" style="overflow: scroll">
+        <th:block th:replace="fragments/fileManager :: fileManager(${backend.getFolderTree()})"></th:block>
+    </div>
+</main>
 </body>
 </html>

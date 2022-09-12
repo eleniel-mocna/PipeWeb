@@ -11,12 +11,36 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
+/**
+ * This is a class describing a users backend with all the info that is needed.
+ * <p>
+ * This class is a multiton which can be accessed by 2 ways. Either by giving a name and a password
+ * or by giving an HTMLSession with a name already present.
+ */
 public class Backend {
+    /**
+     * Path to the database of available backends.
+     */
     private final static String DB_PATH = "backends.txt";
+    /**
+     * Multiton map for instances
+     */
     private final static Map<String, Backend> backends;
+    /**
+     * Name of the user
+     */
     public final String name;
+    /**
+     * SHA256 encoded password
+     */
     private final String encodedPass;
+    /**
+     * List of all script files. These are reloaded every time from disk when the instance is created
+     */
     private transient ArrayList<Script> scripts;
+    /**
+     * All runs of scripts in this session.
+     */
     public ArrayList<ScriptRun> runs = new ArrayList<>();
     private File homeDir;
     private final File scriptsFolder;
@@ -85,10 +109,20 @@ public class Backend {
         this.scripts = loadScripts();
     }
 
+    /**
+     * Get all available backends.
+     * @return All available backends.
+     */
     public static Collection<Backend> list() {
         return backends.values();
     }
 
+    /**
+     * Get a Backend for a name with given password, or null if incorrect
+     * @param name userName
+     * @param password unencrypted password
+     * @return wanted Backend or null
+     */
     public static Backend forName(String name, String password) {
         Backend theBackend = backends.get(name);
         if (theBackend == null) {
@@ -105,11 +139,25 @@ public class Backend {
         return null;
     }
 
+    /**
+     * @apiNote This should be removed and logging in should be supported just by name and password
+     * (you can set the name in the session without the correct password, but since this webpage should be run
+     * in a secure network where all users aren't malicious, this is not a big issue)
+     * @param session A session with a userName set
+     * @return wanted Backend
+     */
     public static Backend forName(HttpSession session) {
         return backends.get((String) session.getAttribute("userName"));
     }
 
-    public static boolean createBackend(String name, String unEncodedPass, String path) throws KeyAlreadyExistsException {
+    /**
+     * Create a backend with the given properties
+     * @param name the userName
+     * @param unEncodedPass password as entered by the user
+     * @param path path to the root directory
+     * @throws KeyAlreadyExistsException if a username already exists.
+     */
+    public static void createBackend(String name, String unEncodedPass, String path) throws KeyAlreadyExistsException {
         String encodedPass;
         try {
             encodedPass = encryptPassword(unEncodedPass);
@@ -124,11 +172,12 @@ public class Backend {
                     new File(path));
             backends.put(name, b);
             saveBackends();
-            return true;
         }
-        return false;
     }
 
+    /**
+     * Save backends to the DB_PATH file.
+     */
     public static void saveBackends() {
         StringBuffer ret = new StringBuffer();
         backends.values().forEach(x -> ret.append(x.name)
@@ -146,10 +195,6 @@ public class Backend {
         }
     }
 
-    public ArrayList<Script> getScripts() {
-        return scripts;
-    }
-
     private ArrayList<Script> loadScripts() { //TODO: test this
         ArrayList<Script> ret = new ArrayList<>();
         for (File file : Objects.requireNonNull(scriptsFolder.listFiles())) {
@@ -163,12 +208,17 @@ public class Backend {
         return ret;
     }
 
-    public boolean addScript(Script newScript, boolean hardCopy) {  //TODO: Make this nicer
+    /**
+     * Add a script to the backend either by hard-linking to the scripts folder or by copying it there
+     * @param newScript the script to be added
+     * @param hardCopy if true copy to the folder  else hard-link
+     */
+    public void addScript(Script newScript, boolean hardCopy) {  //TODO: Make this nicer
         String scriptName = newScript.getPath().getName();
         for (Script s :
                 scripts) {
             if (scriptName.equals(s.getPath().getName())) {
-                return false;
+                return;
             }
         }
         File newScriptFile = new File(scriptsFolder + File.separator + scriptName);
@@ -203,7 +253,7 @@ public class Backend {
             }
         }
 
-        return scripts.add(newScript);
+        scripts.add(newScript);
     }
 
     private void readObject(java.io.ObjectInputStream in)
@@ -212,6 +262,10 @@ public class Backend {
         this.scripts = loadScripts();
     }
 
+    /**
+     * @param name name of the wanted script
+     * @return The wanted script or null if it doesn't exist
+     */
     public Script getScript(String name) {
         for (Script s :
                 scripts) {
@@ -222,10 +276,16 @@ public class Backend {
         return null;
     }
 
+    /**
+     * Reload the folder tree from the root.
+     */
     public void reloadFolderTree() {
         folderTree = new DefaultFolderTree(homeDir);
     }
 
+    /**
+     * @return Folder tree from the root.
+     */
     public FolderTree getFolderTree() {
         reloadFolderTree();
         return folderTree;

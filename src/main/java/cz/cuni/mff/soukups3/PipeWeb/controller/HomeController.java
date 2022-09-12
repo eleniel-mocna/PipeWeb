@@ -13,17 +13,18 @@ import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * This controller takes care of pages after the login.
+ */
 @Controller
 public class HomeController {
     @GetMapping("/home")
     public String home(HttpSession session, Model model,
                        @RequestParam(name = "script", required = false, defaultValue = "") String script){
-        System.err.println("BLABLA: " + session.getAttribute("userName"));
         if (Backend.forName(session)==null){
             return new UsersController().login(null, session, model, "false");
         }
         Backend backend = Backend.forName(session);
-        System.err.println("Called home from: " + session.getAttribute("userName"));
         if (!"".equals(script)){
             model.addAttribute("script",backend.getScript(script));
             backend.reloadFolderTree();
@@ -39,6 +40,8 @@ public class HomeController {
         if (backend==null){
             return "/login";
         }
+        model.addAttribute("dateFormat", new SimpleDateFormat("dd/MM/yyyy - hh:mm:ss"));
+        model.addAttribute("backend", backend);
         if (!("".equals(scriptPath))){
             model.addAttribute("tried", true);
             File descriptorFile = new File(scriptPath+".desc");
@@ -54,7 +57,6 @@ public class HomeController {
             } else model.addAttribute("descriptorExists", true);
 
             if (!failed) {
-                //TODO:make hardCopy an input option
                 backend.addScript(Script.fromConfig(scriptFile, descriptorFile), true);
             }
             model.addAttribute("failed", failed);
