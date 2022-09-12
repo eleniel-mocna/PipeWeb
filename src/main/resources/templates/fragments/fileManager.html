@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml" >
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
 
     <meta charset="UTF-8">
@@ -17,26 +17,32 @@
         data-size=${dir.root().length()},
         data-ext=DIR">
 
-            <td style="color:rgb(0, 182, 161); width: 25%"><form hx-post="/fileTreeView  "
-                                                                 hx-trigger="submit"
-                                                                 hx-target="#fileManagerRoot"
-                                                                 hx-swap="innerHTML">
-                <div><button th:text="${offset + dir.root().getName()}" type="submit" name="path" th:value="${dir}">Go</button></div>
-                <!--folder button packed into div-->
+            <td style="color:rgb(0, 182, 161); width: 25%">
+                <form hx-post="/fileTreeView  "
+                      hx-trigger="submit"
+                      hx-target="#fileManagerRoot"
+                      hx-swap="innerHTML">
+                    <div>
+                        <button th:text="${offset + dir.root().getName()}" type="submit" name="path" th:value="${dir}">
+                            Go
+                        </button>
+                    </div>
+                    <!--folder button packed into div-->
 
-            </form></td>
-            <td >DIR</td>
+                </form>
+            </td>
+            <td>DIR</td>
             <td th:text="${dir.root().length()}"></td>
             <td th:text="${dateFormat.format(dir.root().lastModified())}"></td>
-            <td >
+            <td>
                 <button type="button" th:with="backs='\\', forws='/'"
                         th:attr="onclick=|useFile('${dir.toString().replace(backs, forws)}')|">X
                 </button>
             </td>
-            <td >
+            <td>
                 <!-- need to be repaired!!! -->
-               <!-- <button type="submit" th:value="${dir}">hide
-                </button>-->
+                <!-- <button type="submit" th:value="${dir}">hide
+                 </button>-->
             </td>
 
         </tr>
@@ -53,9 +59,9 @@
             <td th:text="${offset + file.getName()}"></td>
             <td th:with='splits=${file.toString().split("\.")}'
                 th:text="${splits.length>1 ? splits[splits.length-1] : '-'}"></td>
-            <td  th:text="${file.length()}"></td>
-            <td  th:text="${dateFormat.format(file.lastModified())}"></td>
-            <td >
+            <td th:text="${file.length()}"></td>
+            <td th:text="${dateFormat.format(file.lastModified())}"></td>
+            <td>
                 <button type="button" th:with="backs='\\', forws='/'"
                         th:attr="onclick=|useFile('${file.toString().replace(backs, forws)}')|">X
                 </button>
@@ -79,19 +85,27 @@
         <tr>
             <!--dát dohromady s main.css-->
 
-            <th >
-                <div class="resizeDiv"><button type="button" onclick="sortFileManager('name')">Name</button></div>
+            <th>
+                <div class="resizeDiv">
+                    <button type="button" onclick="sortFileManager('name')">Name</button>
+                </div>
             </th>
-            <th >
-                <div class="resizeDiv"><button type="button" onclick="sortFileManager('size')">Ext</button></div>
+            <th>
+                <div class="resizeDiv">
+                    <button type="button" onclick="sortFileManager('ext')">Ext</button>
+                </div>
             </th>
-            <th >
-                <div class="resizeDiv"><button type="button" onclick="sortFileManager('ext')">Size</button></div>
+            <th>
+                <div class="resizeDiv">
+                    <button type="button" onclick="sortFileManager('size')">Size</button>
+                </div>
             </th>
-            <th >
-                <div class="resizeDiv"><button type="button" onclick="sortFileManager('modified')">Date</button></div>
+            <th>
+                <div class="resizeDiv">
+                    <button type="button" onclick="sortFileManager('modified')">Date</button>
+                </div>
             </th>
-            <th >
+            <th>
                 <form id="refresherForm" hx-post="/fileTreeView  "
                       hx-trigger="submit"
                       hx-target="#fileManagerRoot"
@@ -106,12 +120,16 @@
             <td class="currentDirectory">
                 <form hx-post="/fileTreeView  "
                       hx-trigger="submit"
-                         hx-target="#fileManagerRoot"
+                      hx-target="#fileManagerRoot"
                       hx-swap="innerHTML">
-                    <button class="currentDirectory" type="submit" name="path" th:value="${root.root().getParent()}">..</button>
+                    <button class="currentDirectory" type="submit" name="path" th:value="${root.root().getParent()}">
+                        ..
+                    </button>
                 </form>
             </td>
-            <td colspan="5" class="currentDirectory"><th:block th:text="${root}"></th:block></td>
+            <td colspan="5" class="currentDirectory">
+                <th:block th:text="${root}"></th:block>
+            </td>
         </tr>
 
         <tr th:if="${root!=null}" th:replace="fragments/fileManager :: directory(${root}, '')"></tr>
@@ -132,13 +150,14 @@
 
         function sortList(ul, fun) {
             let i;
+            console.log(ul.childNodes)
             const new_ul = ul.cloneNode(false);
 
             // Add all lis to an array
             const lis = [];
             const staying_list = [];
             for (i = ul.childNodes.length; i--;) {
-                if (ul.childNodes[i].nodeName==="TR" && ul.childNodes[i].classList.contains("fileTreeDirectory")) {
+                if (ul.childNodes[i].nodeName === "TR" && ul.childNodes[i].classList.contains("fileTreeDirectory")) {
                     lis.push(ul.childNodes[i]);
                 } else {
                     staying_list.push(ul.childNodes[i])
@@ -148,7 +167,9 @@
 
             staying_list.reverse();
             lis.reverse();
+            console.log(lis)
             lis.sort(fun);
+            console.log(fun(lis[0], lis[1]))
             for (i = 0; i < staying_list.length; i++) {
                 new_ul.appendChild(staying_list[i]);
             }
@@ -166,21 +187,26 @@
         }
 
         function sortFileManager1(by, ascending) {
-            sortingBy = sortingBy *-1
-            console.log(by + " " + ascending)
-            let all = document.getElementsByClassName("fileTable");
-            let fun = by === "name" || by === "ext" ? function (a, b) {
-                return ($(a).data(by) < $(b).data(by) ? -ascending : ($(a).data(by) > $(b).data(by) ? ascending : 0));
-            } : function (a, b) {
-                return (parseInt($(a).data(by)) < parseInt($(b).data(by)) ? -ascending :
-                    parseInt(($(a).data(by)) > parseInt($(b).data(by)) ? ascending : 0));
-            };
-
-            for (let i = 0; i < all.length; i++) {
-                const ul = all[i];
-                sortList(ul.childNodes[1], fun);
+            function fun(a, b) {
+                console.log($(a).data(by), " X ", $(b).data(by))
+                if (by == "name" || by == "ext") {
+                        let result = ($(a).data(by) < $(b).data(by) ? -ascending : ($(a).data(by) > $(b).data(by) ? ascending : 0));
+                        console.log(result);
+                        return result;
+                }
+                    let result = parseInt($(a).data(by)) < parseInt($(b).data(by)) ? -ascending :
+                        parseInt(($(a).data(by)) > parseInt($(b).data(by)) ? ascending : 0);
+                    console.log(result);
+                    return result;
             }
-        }
+                sortingBy = sortingBy * -1
+                console.log(by + " " + ascending)
+                let all = document.getElementsByClassName("fileTable");
+                for (let i = 0; i < all.length; i++) {
+                    const ul = all[i];
+                    sortList(ul.childNodes[1], fun);
+                }
+            }
     </script>
 </div>
 
