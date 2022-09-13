@@ -1,8 +1,18 @@
 # NGS Pipe web
 
+## On Windows clone thi repository via
+
+```shell
+git clone https://github.com/eleniel-mocna/PipeWeb --config core.autocrlf=input
+```
+
 This is a try for a web frontend for the
 [Nextgen Pipe Shell project](https://github.com/eleniel-mocna/nextgen_pipe).
 For more information read the README that is there. There is a tl;dr in the next section.
+
+The main focus of this app was to create a web page
+that will require minimal maintenance, therefore no big
+libraries are used (both in java and js sides).
 
 ### Nextgen Pipe
 
@@ -128,7 +138,8 @@ and with what exit code they ended.
 There is a test script available in the sample_scripts folder,
 which can be used to test if the script launching works.
 
-## TODO (ALPHA 1.0)
+## More things that should be added
 
-- Apply predictions for K layers of the FileTree
+- Bring back multi-layer file manager
+- Apply predictions for K layers of the file manager
 - Add auto-refreshes to RUNs
