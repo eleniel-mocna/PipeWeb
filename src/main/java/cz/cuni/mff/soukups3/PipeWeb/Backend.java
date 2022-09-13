@@ -195,6 +195,10 @@ public class Backend {
         }
     }
 
+    public ArrayList<Script> getScripts() {
+        return scripts;
+    }
+
     private ArrayList<Script> loadScripts() { //TODO: test this
         ArrayList<Script> ret = new ArrayList<>();
         for (File file : Objects.requireNonNull(scriptsFolder.listFiles())) {

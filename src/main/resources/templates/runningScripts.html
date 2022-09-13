@@ -6,19 +6,19 @@
     <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
     <style>
-    table, th, td {
-    border:1px solid black;
-    }
+        table, th, td {
+            border: 1px solid black;
+        }
     </style>
 </head>
 <body>
-<span th:replace="fragments/header :: header">Missing header</span>
-<h1>Scripts:</h1>
-<table>
-    <th>Script</th>
-    <th>Arguments</th>
-    <th>Exit Code</th>
-    <span th:each="run : ${backend.runs}">
+<th:block th:replace="fragments/header :: header">Missing header</th:block>
+<div style="margin-top: 50px">
+    <table>
+        <th>Script</th>
+        <th>Arguments</th>
+        <th>Exit Code</th>
+        <span th:each="run : ${backend.runs}">
         <tr>
             <td th:text="${run.script}"></td>
             <td>
@@ -30,6 +30,7 @@
 
         </tr>
     </span>
-</table>
+    </table>
+</div>
 </body>
 </html>

@@ -190,23 +190,24 @@
             function fun(a, b) {
                 console.log($(a).data(by), " X ", $(b).data(by))
                 if (by == "name" || by == "ext") {
-                        let result = ($(a).data(by) < $(b).data(by) ? -ascending : ($(a).data(by) > $(b).data(by) ? ascending : 0));
-                        console.log(result);
-                        return result;
-                }
-                    let result = parseInt($(a).data(by)) < parseInt($(b).data(by)) ? -ascending :
-                        parseInt(($(a).data(by)) > parseInt($(b).data(by)) ? ascending : 0);
+                    let result = ($(a).data(by) < $(b).data(by) ? -ascending : ($(a).data(by) > $(b).data(by) ? ascending : 0));
                     console.log(result);
                     return result;
-            }
-                sortingBy = sortingBy * -1
-                console.log(by + " " + ascending)
-                let all = document.getElementsByClassName("fileTable");
-                for (let i = 0; i < all.length; i++) {
-                    const ul = all[i];
-                    sortList(ul.childNodes[1], fun);
                 }
+                let result = parseInt($(a).data(by)) < parseInt($(b).data(by)) ? -ascending :
+                    parseInt(($(a).data(by)) > parseInt($(b).data(by)) ? ascending : 0);
+                console.log(result);
+                return result;
             }
+
+            sortingBy = sortingBy * -1
+            console.log(by + " " + ascending)
+            let all = document.getElementsByClassName("fileTable");
+            for (let i = 0; i < all.length; i++) {
+                const ul = all[i];
+                sortList(ul.childNodes[1], fun);
+            }
+        }
     </script>
 </div>
 

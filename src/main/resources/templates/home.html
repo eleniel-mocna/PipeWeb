@@ -15,15 +15,16 @@
         // noinspection JSUnusedGlobalSymbols
         function useFile(file) {
             console.log(file);
-            document.getElementsByClassName("inputArgument")[lastUsed].value=file;
+            document.getElementsByClassName("inputArgument")[lastUsed].value = file;
             lastUsed++;
             lastUsed %= document.getElementsByClassName("inputArgument").length;
         }
+
         function setLastUsed(by) {
             for (let i = 0; i < document.getElementsByClassName("inputArgument").length; i++) {
                 const element = document.getElementsByClassName("inputArgument")[i];
-                if (by===element){
-                    lastUsed=i;
+                if (by === element) {
+                    lastUsed = i;
                     return 1;
                 }
             }
@@ -73,7 +74,7 @@
 
 <div style="text-align:right; margin-top: 50px">
     Hello, <span th:text="${backend.name}">placeholder</span>! <br><a href="/addScript">Add a script.</a><br>
-    <ul th:each="s : ${backend.getScripts()}"  style="text-align:left;">
+    <ul th:each="s : ${backend.getScripts()}" style="text-align:left;">
         <li>
             <form action="#" method="get">
                 <input type="submit" name="script" th:value="${s}">
@@ -81,7 +82,8 @@
         </li>
     </ul>
 </div>
-<hr><hr>
+<hr>
+<hr>
 
 
 <div class="row">
@@ -103,40 +105,43 @@
                 <tr>
                     <td>Sample 1</td>
                     <td th:each="i:${script.getInputs()}">
-                        <datalist th:id="${i.toString()}" >
+                        <datalist th:id="${i.toString()}">
                             <select>
                                 <option
                                         th:each="v : ${backend.getFolderTree().allFilesDirs(i.filter, backend.getFolderTree().root())}"
                                         th:value="${v}"></option>
                             </select>
                         </datalist>
-                        <input class="inputArgument" onfocus='setLastUsed(this)' type="text" th:name="${i.toString()+'1'}" th:list="${i.toString()}">
+                        <input class="inputArgument" onfocus='setLastUsed(this)' type="text"
+                               th:name="${i.toString()+'1'}" th:list="${i.toString()}">
                     </td>
                 </tr>
                 <tr>
                     <td>Sample 2</td>
                     <td th:each="i:${script.getInputs()}">
-                        <datalist th:id="${i.toString()}" >
+                        <datalist th:id="${i.toString()}">
                             <select>
                                 <option
                                         th:each="v : ${backend.getFolderTree().allFilesDirs(i.filter, backend.getFolderTree().root())}"
                                         th:value="${v}"></option>
                             </select>
                         </datalist>
-                        <input class="inputArgument" onfocus='setLastUsed(this)' type="text" th:name="${i.toString()+'2'}" th:list="${i.toString()}">
+                        <input class="inputArgument" onfocus='setLastUsed(this)' type="text"
+                               th:name="${i.toString()+'2'}" th:list="${i.toString()}">
                     </td>
                 </tr>
                 <tr>
                     <td>Sample 3</td>
                     <td th:each="i:${script.getInputs()}">
-                        <datalist th:id="${i.toString()}" >
+                        <datalist th:id="${i.toString()}">
                             <select>
                                 <option
                                         th:each="v : ${backend.getFolderTree().allFilesDirs(i.filter, backend.getFolderTree().root())}"
                                         th:value="${v}"></option>
                             </select>
                         </datalist>
-                        <input class="inputArgument" onfocus='setLastUsed(this)' type="text" th:name="${i.toString()+'3'}" th:list="${i.toString()}">
+                        <input class="inputArgument" onfocus='setLastUsed(this)' type="text"
+                               th:name="${i.toString()+'3'}" th:list="${i.toString()}">
                     </td>
                 </tr>
             </table>
