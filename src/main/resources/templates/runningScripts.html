@@ -31,6 +31,12 @@
         </tr>
     </span>
     </table>
+    <div style="background-color: #ab5959" th:if="${failed}==true">An error occurred. The script did not run.
+        <details>
+            <summary>Error message:</summary>
+            <span th:text="${error.getMessage()}"></span>
+        </details>
+    </div>
 </div>
 </body>
 </html>

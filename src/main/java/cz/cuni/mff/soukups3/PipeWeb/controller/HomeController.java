@@ -5,10 +5,12 @@ import cz.cuni.mff.soukups3.PipeWeb.Script;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -67,7 +69,7 @@ public class HomeController {
         return "addScript";
     }
 
-    @GetMapping("/runningScripts")
+    @RequestMapping("/runningScripts")
     public String runningScripts(HttpSession session, Model model,
                                  @RequestParam(name = "script", required = false, defaultValue = "") String scriptName,
                                  @RequestParam Map<String, String> allRequestParams){
@@ -77,12 +79,18 @@ public class HomeController {
         }
         backend.reloadFolderTree();
         Script script;
-        if (!"".equals(scriptName)) {
-            if ((script=backend.getScript(scriptName))!=null){
-                backend.runs.add(script.run(backend.getFolderTree().root(), allRequestParams.keySet().stream()
-                        .filter(x->!"script".equals(x))
-                        .map(allRequestParams::get).collect(Collectors.toList())));
+        try {
+            if (!"".equals(scriptName)) {
+                if ((script = backend.getScript(scriptName)) != null) {
+                    backend.runs.add(script.run(backend.getFolderTree().root(), allRequestParams.keySet().stream()
+                            .filter(x -> !"script".equals(x))
+                            .map(allRequestParams::get).collect(Collectors.toList())));
+                }
             }
+        } catch (IOException|RuntimeException e){
+            System.err.println("IOException occurred during an evaluation of a script.");
+            model.addAttribute("failed", true);
+            model.addAttribute("error", e);
         }
         model.addAttribute("backend", backend);
         return "runningScripts";

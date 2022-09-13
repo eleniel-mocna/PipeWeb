@@ -88,7 +88,7 @@
 
 <div class="row">
     <div class="column1" th:if="${script!=null}">
-        <form action="/runningScripts" method="get">
+        <form action="/runningScripts" method="post">
             <label>
                 Config file:
                 <input class="inputArgument" onfocus='setLastUsed(this)' type="text" name="configFile" placeholder="-">

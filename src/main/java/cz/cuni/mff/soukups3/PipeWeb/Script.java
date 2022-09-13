@@ -122,7 +122,7 @@ public class Script implements Serializable {
      * @param variables all variables to be submitted to the script as variables
      * @return object collecting the result
      */
-    public ScriptRun run(File root, Collection<String> variables) {
+    public ScriptRun run (File root, Collection<String> variables) throws IOException{
         System.err.println("RAN script with:" + String.join(",",
                 variables.stream()
                         .map(Object::toString).toArray(String[]::new)));
