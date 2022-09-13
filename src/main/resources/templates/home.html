@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" th:href="@{/css/main.css?x=4}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css?x=5}"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
         let lastUsed = 0;
@@ -72,7 +72,7 @@
 
 <span th:replace="fragments/header :: header">Missing header</span>
 
-<div style="text-align:right; margin-top: 50px">
+<div th:if="${script==null}" style="text-align:right; margin-top: 50px">
     Hello, <span th:text="${backend.name}">placeholder</span>! <br><a href="/addScript">Add a script.</a><br>
     <ul th:each="s : ${backend.getScripts()}" style="text-align:left;">
         <li>
@@ -149,7 +149,7 @@
         </form>
     </div>
 
-    <div class="column2">
+    <div class="column2" th:if="${script!=null}">
         <th:block th:replace="fragments/fileManager :: fileManager(${backend.getFolderTree()})"></th:block>
     </div>
 </div>

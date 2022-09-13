@@ -132,7 +132,7 @@ div {
 
 .fileTable{
   /* because of resizing */
-  width: 700px;
+  /*width: 500px;*/
   height: 110px;
   overflow: scroll;
 }

@@ -31,11 +31,11 @@ public class HomeController {
             model.addAttribute("script",backend.getScript(script));
             backend.reloadFolderTree();
         }
-        model.addAttribute("dateFormat", new SimpleDateFormat("dd/MM/yyyy - hh:mm:ss"));
+        model.addAttribute("dateFormat", new SimpleDateFormat("dd/MM/yy hh:mm"));
         model.addAttribute("backend", backend);
         return ("home");
     }
-    @GetMapping("/addScript")
+    @RequestMapping("/addScript")
     public String addScript(HttpSession session, Model model,
                             @RequestParam(name = "scriptPath", required = false, defaultValue = "") String scriptPath){
         Backend backend = Backend.forName(session);

@@ -25,7 +25,7 @@ public class Backend {
     /**
      * Multiton map for instances
      */
-    private final static Map<String, Backend> backends;
+    private final static Map<String, Backend> backends = new HashMap<>();
     /**
      * Name of the user
      */
@@ -65,7 +65,6 @@ public class Backend {
     }
 
     static {
-        backends = new HashMap<>();
         File dbFile = new File(DB_PATH);
         if (dbFile.exists()) {
             try (BufferedReader br = new BufferedReader(new FileReader(dbFile))) {
@@ -90,7 +89,7 @@ public class Backend {
 
     private Backend(String name,
                     String encodedPass,
-                    File scripts,
+                    File ignoredScripts, //Always homeDir/scripts, this is for
                     File homeDir) {
         this.name = name;
         this.encodedPass = encodedPass;
@@ -104,7 +103,7 @@ public class Backend {
         scriptsFolder.mkdir();
         reloadFolderTree();
         if (homeDir.mkdir()) {
-            System.err.println("INFO: Created directory" + homeDir); // TODO: Add a logger
+            System.err.println("INFO: Created directory" + homeDir);
         }
         this.scripts = loadScripts();
     }
@@ -157,7 +156,7 @@ public class Backend {
      * @param path path to the root directory
      * @throws KeyAlreadyExistsException if a username already exists.
      */
-    public static void createBackend(String name, String unEncodedPass, String path) throws KeyAlreadyExistsException {
+    public static boolean createBackend(String name, String unEncodedPass, String path) throws KeyAlreadyExistsException {
         String encodedPass;
         try {
             encodedPass = encryptPassword(unEncodedPass);
@@ -172,7 +171,9 @@ public class Backend {
                     new File(path));
             backends.put(name, b);
             saveBackends();
+            return true;
         }
+        return false;
     }
 
     /**

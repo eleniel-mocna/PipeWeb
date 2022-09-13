@@ -61,8 +61,8 @@ public class UsersController {
             model.addAttribute("triedToAdd", false);
         } else {
             model.addAttribute("triedToAdd", true);
-            Backend.createBackend(name, password, path);
-            model.addAttribute("added", true);
+            boolean added = Backend.createBackend(name, password, path);
+            model.addAttribute("added", added);
             model.addAttribute("name", name);
         }
         return ("addUser");
