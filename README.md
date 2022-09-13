@@ -1,6 +1,6 @@
 # NGS Pipe web
 
-## On Windows clone thi repository via
+## On Windows clone this repository via
 
 ```shell
 git clone https://github.com/eleniel-mocna/PipeWeb --config core.autocrlf=input
@@ -140,6 +140,8 @@ which can be used to test if the script launching works.
 
 ## More things that should be added
 
+- Add support for scheduling starts
+- Add support for killing processes
 - Bring back multi-layer file manager
 - Apply predictions for K layers of the file manager
 - Add auto-refreshes to RUNs

@@ -2,6 +2,9 @@ package cz.cuni.mff.soukups3.PipeWeb;
 
 import java.util.Collection;
 
+/**
+ * Objects of this class represent a script that is either running or finished.
+ */
 public class ScriptRun {
     /**
      * The process in which this script is run.

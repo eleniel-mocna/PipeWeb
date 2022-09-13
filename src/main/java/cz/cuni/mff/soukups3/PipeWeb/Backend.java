@@ -139,9 +139,10 @@ public class Backend {
     }
 
     /**
-     * @apiNote This should be removed and logging in should be supported just by name and password
+     * <p>
+     * Note This should be removed and logging in should be supported just by name and password
      * (you can set the name in the session without the correct password, but since this webpage should be run
-     * in a secure network where all users aren't malicious, this is not a big issue)
+     * in a secure network where all users aren't malicious, this is not a big issue)</p>
      * @param session A session with a userName set
      * @return wanted Backend
      */
