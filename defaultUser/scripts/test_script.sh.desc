@@ -1,0 +1,2 @@
+first_in:.* 	second_in:.*\.txt
+first_out.vcf:	second_out:

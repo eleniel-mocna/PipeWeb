@@ -123,6 +123,11 @@ scripts:
 Here you can see what arguments did the scripts have
 and with what exit code they ended.
 
+## Test script
+
+There is a test script available in the sample_scripts folder,
+which can be used to test if the script launching works.
+
 ## TODO (ALPHA 1.0)
 
 - Apply predictions for K layers of the FileTree
