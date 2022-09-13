@@ -218,7 +218,7 @@ public class Backend {
      * @param newScript the script to be added
      * @param hardCopy if true copy to the folder  else hard-link
      */
-    public void addScript(Script newScript, boolean hardCopy) {  //TODO: Make this nicer
+    public void addScript(Script newScript, boolean hardCopy) {
         String scriptName = newScript.getPath().getName();
         for (Script s :
                 scripts) {
@@ -237,6 +237,7 @@ public class Backend {
                 } else {
                     newScript.createDesc(newDescFile);
                 }
+                newScript = Script.fromConfig(newScriptFile,newDescFile);
             } else {
                 Files.createLink(newScriptFile.toPath(), newScript.getPath().toPath());
                 if (oldDescFile.exists()) {

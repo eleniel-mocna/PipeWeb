@@ -123,9 +123,6 @@ public class Script implements Serializable {
      * @return object collecting the result
      */
     public ScriptRun run (File root, Collection<String> variables) throws IOException{
-        System.err.println("RAN script with:" + String.join(",",
-                variables.stream()
-                        .map(Object::toString).toArray(String[]::new)));
         Runtime r = Runtime.getRuntime();
         Process p;
         try {

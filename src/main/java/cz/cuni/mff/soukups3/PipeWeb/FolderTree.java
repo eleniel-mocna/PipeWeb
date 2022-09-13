@@ -39,7 +39,6 @@ public interface FolderTree {
      * @return all files and dirs filtered and relative to the given file
      */
     default List<File> allFilesDirs(String filter, File relativeTo){
-        System.err.println("Filter is: "+ filter);
         List<File> ret = allFilesDirs().stream().filter(x -> x.toString().matches(filter)).collect(Collectors.toList());
         return ret.stream().map(x -> root().toPath().relativize(x.toPath()).toFile()).collect(Collectors.toList());
     }

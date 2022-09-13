@@ -93,8 +93,6 @@ public class DefaultFolderTree implements FolderTree {
     public void refresh() {
         try {
             this.root = root.getCanonicalFile();
-            System.err.println(root + " was loaded!");
-            System.err.println(root.lastModified() + " modified.");
         } catch (IOException e) {
             System.err.println("IOException occurred:" + e.getStackTrace());
         }

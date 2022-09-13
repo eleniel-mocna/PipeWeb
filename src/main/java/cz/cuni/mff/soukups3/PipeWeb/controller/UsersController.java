@@ -30,12 +30,10 @@ public class UsersController {
             @RequestParam(name = "name", required = false, defaultValue = "") String name,
             @RequestParam(name = "pass", required = false, defaultValue = "") String password) {
         Backend backend = Backend.forName(name, password);
-        System.err.println("Got logged in for: " + backend);
         if (backend != null) {
             session.setAttribute("userName", name);
             return new RedirectView("/home");
         }
-        System.err.println("Backend is null going to login");
         attributes.addAttribute("failedLogin", true);
         return new RedirectView("/login");
 

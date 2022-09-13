@@ -77,7 +77,7 @@ to his root folder.
 ### User folder structure
 
 Each user has his own folder, where he can store
-all needed data. Also there is a `scripts` folder
+all needed data, also there is a `scripts` folder
 in which all of his scripts are saved.
 
 ### Adding your first script
@@ -102,7 +102,7 @@ left upper corner).
 Here choose the script you want to run:
 ![img_5.png](readme_images/img_5.png)
 
-Then you will get the arguments menu. Here you can specify the
+Then you will get the arguments' menu. Here you can specify the
 config file and the arguments. You can fill these by hand
 or by using the `x` buttons in the file manager.
 Also hints for files in your root directory will
@@ -111,10 +111,17 @@ be provided by the browser.
 You can leave the config file empty and the
 default config file will be used.
 
-After all arguments are filled in run the script by submitting 
+After all arguments are filled in run the script by submitting
 the form by the button below the arguments.
 
 ![img_6.png](readme_images/img_6.png)
+
+This will show you the list of running (and already finished)
+scripts:
+![img.png](readme_images/img_7.png)
+
+Here you can see what arguments did the scripts have
+and with what exit code they ended.
 
 ## TODO (ALPHA 1.0)
 
