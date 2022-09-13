@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 printf "Test script started...\n">"test_output"
 for (( i = 1; i <= $#; i++ )); do
